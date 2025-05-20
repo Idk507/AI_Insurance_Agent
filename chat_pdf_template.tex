@@ -1,0 +1,58 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titling}
+\usepackage{xcolor}
+
+% Page layout
+\geometry{margin=1in}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% Define colors
+\definecolor{usercolor}{RGB}{0, 51, 102}
+\definecolor{asstcolor}{RGB}{51, 102, 153}
+
+% Title
+\title{AI Insurance Agent Chat Session}
+\author{}
+\date{}
+
+% Custom commands
+\newcommand{\user}[1]{%
+  \vspace{0.5em}
+  \noindent
+  \color{usercolor}
+  \textbf{User:} #1
+  \color{black}
+}
+
+\newcommand{\assistant}[1]{%
+  \vspace{0.5em}
+  \noindent
+  \color{asstcolor}
+  \textbf{Assistant:} #1
+  \color{black}
+}
+
+\newcommand{\suggestions}[1]{%
+  \vspace{0.5em}
+  \noindent
+  \textbf{Suggestions:}
+  \begin{itemize}[leftmargin=1.5em, itemsep=0pt]
+    #1
+  \end{itemize}
+}
+
+\begin{document}
+
+\maketitle
+
+\section*{Conversation}
+
+% Placeholder for additional messages
+% Placeholder for additional messages
+
+\end{document}

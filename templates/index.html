@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insurance Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* Text wrapping and readability */
+        #chatBox p { white-space: pre-wrap; word-break: break-word; }
+        /* Responsive design */
+        @media (max-width: 640px) {
+            .flex { flex-direction: column; }
+            #chatBox { max-height: 60vh; }
+            .p-4 { padding: 1rem; }
+            #chatHistoryMenu { width: 100%; }
+            .sidebar { width: 100%; position: static; }
+        }
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: #dbeafe;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .sidebar-item:hover {
+            background-color: #bfdbfe;
+        }
+        .sidebar-item.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        /* Chat history menu */
+        #chatHistoryMenu { 
+            overflow: hidden; 
+        }
+        #chatHistory li { 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            max-width: 100%; 
+        }
+        #chatHistory li.active { 
+            background-color: #3b82f6;
+        }
+        /* Button animations */
+        .interactive-btn { 
+            transition: transform 0.2s; 
+        }
+        .interactive-btn:hover { 
+            transform: scale(1.05); 
+        }
+        /* Logo sizing */
+        .logo { 
+            max-width: 100px; 
+            height: auto; 
+        }
+        /* Custom styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        header {
+            background-color: #7a9eff;
+            color: white;
+        }
+        .bg-blue-100 {
+            background-color: #dbeafe;
+        }
+        .bg-blue-200 {
+            background-color: #bfdbfe;
+        }
+        .bg-blue-500 {
+            background-color: #3b82f6;
+        }
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+        .border-blue-300 {
+            border-color: #93c5fd;
+        }
+        .focus:ring-blue-500 {
+            --tw-ring-color: #3b82f6;
+        }
+        .chat-message {
+            max-width: 80%;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .user-message {
+            background-color: #dbeafe;
+            margin-left: auto;
+        }
+        .assistant-message {
+            background-color: #f3f4f6;
+        }
+        .content-area {
+            margin-left: 250px;
+            flex: 1;
+        }
+        @media (max-width: 640px) {
+            .content-area {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white flex flex-col h-screen">
+    <!-- Sidebar -->
+    <div class="sidebar flex flex-col">
+        <div class="p-4 flex items-center justify-center">
+            <img src="static/images/beeonix.png" alt="Beeonix Logo" class="logo">
+        </div>
+        <div class="sidebar-item" data-page="home">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Home
+        </div>
+        <div class="sidebar-item" data-page="conversations">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            Conversations
+        </div>
+        <div class="sidebar-item" data-page="settings">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            Settings
+        </div>
+        <div class="sidebar-item" id="newChatButton">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            New Chat
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area flex flex-col h-screen">
+        <!-- Header -->
+        <header class="p-4 flex justify-between items-center shadow-md">
+            <h1 class="text-lg font-bold">AI Insurance Agent</h1>
+            <img src="static/images/Bigtapplogo.png" alt="Bigtapp Analytics Logo" class="logo">
+        </header>
+
+        <!-- Page Content -->
+        <div id="pageContent" class="flex-1 overflow-y-auto">
+            <!-- Home Page -->
+            <div id="homePage" class="p-4 hidden">
+                <h2 class="text-2xl font-bold mb-4">Welcome to AI Insurance Agent</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="p-4 bg-blue-100 rounded-lg shadow-md cursor-pointer" onclick="navigateTo('chat')">
+                        <h3 class="text-lg font-semibold">Chat</h3>
+                        <p>Interact with the AI to get insurance information.</p>
+                    </div>
+                    <div class="p-4 bg-blue-100 rounded-lg shadow-md cursor-pointer" onclick="navigateTo('upload')">
+                        <h3 class="text-lg font-semibold">Upload</h3>
+                        <p>Upload documents for analysis.</p>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Conversations</h3>
+                <div id="homeChatHistory" class="bg-blue-100 p-4 rounded-lg shadow-lg max-h-64 overflow-y-auto mb-6">
+                    <ul id="homeChatList" class="space-y-2"></ul>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Recommended Questions</h3>
+                <div id="recommendedQuestions" class="bg-blue-100 p-4 rounded-lg shadow-lg">
+                    <ul id="questionList" class="space-y-2"></ul>
+                </div>
+            </div>
+
+            <!-- Chat Page -->
+            <div id="chatPage" class="flex flex-col h-full">
+                <div id="chatBox" class="flex-1 p-4 overflow-y-auto bg-white shadow-inner"></div>
+                <div class="p-4 bg-blue-100 flex items-center space-x-2 flex-wrap gap-2">
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="languageButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 004 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                        <div id="languageMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="english">English</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="tamil">Tamil</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="telugu">Telugu</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="malay">Malay</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="thai">Thai</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="chinese">Chinese</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="singlish">Singlish</button>
+                        </div>
+                    </div>
+                    <!-- Input Mode Selector -->
+                    <div class="relative">
+                        <button id="inputModeButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </button>
+                        <div id="inputModeMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="text">Text</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="voice">Speech-to-Text</button>
+                        </div>
+                    </div>
+                    <!-- Output Mode Selector -->
+                    <div class="relative">
+                        <button id="outputModeButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                        </button>
+                        <div id="outputModeMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="text">Text</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="voice">Text-to-Speech</button>
+                            <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="both">Both</button>
+                        </div>
+                    </div>
+                    <!-- Chat Input -->
+                    <input id="chatInput" type="text" class="flex-1 p-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ask about insurance..." />
+                    <!-- Microphone Button -->
+                    <button id="micButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    </button>
+                    <!-- Send Button -->
+                    <button id="sendButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </button>
+                    <!-- Download Chat Button -->
+                    <button id="downloadChatButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn" title="Download Chat as PDF">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Page -->
+            <div id="uploadPage" class="p-4 hidden">
+                <h2 class="text-2xl font-bold mb-4">Upload Documents</h2>
+                <div class="bg-blue-100 p-4 rounded-lg shadow-md">
+                    <input type="file" id="uploadInput" class="mb-4" accept=".pdf,.doc,.docx,.txt">
+                    <button id="uploadButton" class="p-2 bg-blue-500 text-white rounded-md shadow-md interactive-btn">Upload</button>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="p-4 hidden">
+                <h2 class="text-2xl font-bold mb-4">Settings</h2>
+                <div class="bg-blue-100 p-4 rounded-lg shadow-md">
+                    <p class="mb-4">Configure your preferences below.</p>
+                    <!-- Add settings options as needed -->
+                    <div class="mb-4">
+                        <label class="block mb-2">Theme</label>
+                        <select class="p-2 rounded-md border border-blue-300">
+                            <option>Light</option>
+                            <option>Dark</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const micButton = document.getElementById('micButton');
+        const languageButton = document.getElementById('languageButton');
+        const languageMenu = document.getElementById('languageMenu');
+        const inputModeButton = document.getElementById('inputModeButton');
+        const inputModeMenu = document.getElementById('inputModeMenu');
+        const outputModeButton = document.getElementById('outputModeButton');
+        const outputModeMenu = document.getElementById('outputModeMenu');
+        const newChatButton = document.getElementById('newChatButton');
+        const downloadChatButton = document.getElementById('downloadChatButton');
+        const homeChatList = document.getElementById('homeChatList');
+        const questionList = document.getElementById('questionList');
+        let recognition = null;
+        let sessionId = Date.now().toString();
+        let chatSessions = {};
+        let currentLanguage = 'english';
+        let currentInputMode = 'text';
+        let currentOutputMode = 'text';
+        let isSending = false;
+        let currentPage = 'home';
+        let recommendedQuestions = [];
+
+        // Initialize Web Speech API
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                chatInput.value = transcript;
+                if (event.results[event.results.length - 1].isFinal) {
+                    sendMessage(transcript);
+                    recognition.stop();
+                    micButton.classList.remove('bg-red-500');
+                    micButton.classList.add('bg-blue-500');
+                }
+            };
+            recognition.onend = () => {
+                micButton.classList.remove('bg-red-500');
+                micButton.classList.add('bg-blue-500');
+                if (chatInput.value === 'Listening...') {
+                    chatInput.value = '';
+                }
+            };
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                micButton.classList.remove('bg-red-500');
+                micButton.classList.add('bg-blue-500');
+                chatInput.value = '';
+                addMessage('assistant', 'I could not recognize your speech. Please try again.', Date.now());
+            };
+        } else {
+            micButton.disabled = true;
+            micButton.classList.add('opacity-50', 'cursor-not-allowed');
+            addMessage('assistant', 'Speech recognition is not supported in your browser.', Date.now());
+        }
+
+        // Toggle dropdown menus
+        function toggleMenu(menu) {
+            menu.classList.toggle('hidden');
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!languageButton.contains(e.target) && !languageMenu.contains(e.target)) languageMenu.classList.add('hidden');
+            if (!inputModeButton.contains(e.target) && !inputModeMenu.contains(e.target)) inputModeMenu.classList.add('hidden');
+            if (!outputModeButton.contains(e.target) && !outputModeMenu.contains(e.target)) outputModeMenu.classList.add('hidden');
+        });
+
+        // Navigate to a page
+        function navigateTo(page) {
+            document.querySelectorAll('#pageContent > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(`${page}Page`).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.sidebar-item[data-page="${page}"]`)?.classList.add('active');
+            currentPage = page;
+            if (page === 'home') loadHomePage();
+            if (page === 'conversations') loadConversationsPage();
+        }
+
+        // Load home page content
+        async function loadHomePage() {
+            await loadChatHistory();
+            updateRecommendedQuestions();
+        }
+
+        // Load conversations page
+        async function loadConversationsPage() {
+            await loadChatHistory();
+        }
+
+        // Language selection
+        languageMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentLanguage = button.dataset.lang;
+                languageMenu.classList.add('hidden');
+                try {
+                    await axios.post('/api/set_language', { language: currentLanguage, session_id: sessionId });
+                    console.log(`Language set to ${currentLanguage}`);
+                } catch (error) {
+                    console.error('Error setting language:', error);
+                    addMessage('assistant', 'Failed to set language. Please try again.', Date.now());
+                }
+            });
+        });
+
+        // Input mode selection
+        inputModeMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentInputMode = button.dataset.mode;
+                inputModeMenu.classList.add('hidden');
+                try {
+                    await axios.post('/api/set_input_mode', { mode: currentInputMode, session_id: sessionId });
+                    console.log(`Input mode set to ${currentInputMode}`);
+                } catch (error) {
+                    console.error('Error setting input mode:', error);
+                    addMessage('assistant', 'Failed to set input mode. Please try again.', Date.now());
+                }
+            });
+        });
+
+        // Output mode selection
+        outputModeMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentOutputMode = button.dataset.mode;
+                outputModeMenu.classList.add('hidden');
+                try {
+                    await axios.post('/api/set_output_mode', { mode: currentOutputMode, session_id: sessionId });
+                    console.log(`Output mode set to ${currentOutputMode}`);
+                } catch (error) {
+                    console.error('Error setting output mode:', error);
+                    addMessage('assistant', 'Failed to set output mode. Please try again.', Date.now());
+                }
+            });
+        });
+
+        // Button click handlers
+        languageButton.addEventListener('click', () => toggleMenu(languageMenu));
+        inputModeButton.addEventListener('click', () => toggleMenu(inputModeMenu));
+        outputModeButton.addEventListener('click', () => toggleMenu(outputModeMenu));
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                if (page) navigateTo(page);
+                if (item.id === 'newChatButton') startNewChat();
+            });
+        });
+
+        // Start a new chat session
+        async function startNewChat() {
+            sessionId = Date.now().toString();
+            chatBox.innerHTML = '';
+            await loadChatHistory();
+            navigateTo('chat');
+            console.log('Started a new chat session');
+        }
+
+        // Load chat history
+        async function loadChatHistory() {
+            try {
+                const response = await axios.get('/api/chat_history', { params: { session_id: sessionId } });
+                chatSessions = response.data.sessions || {};
+                homeChatList.innerHTML = '';
+                Object.keys(chatSessions).forEach(session => {
+                    const li = document.createElement('li');
+                    li.className = `p-2 bg-blue-200 rounded cursor-pointer hover:bg-blue-300 ${session === sessionId ? 'active' : ''}`;
+                    const summary = chatSessions[session].summary || 'Untitled Session';
+                    li.textContent = summary.length > 30 ? summary.substring(0, 27) + '...' : summary;
+                    li.title = summary;
+                    li.onclick = () => {
+                        loadSession(session);
+                        navigateTo('chat');
+                    };
+                    homeChatList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+                addMessage('assistant', 'Failed to load chat history. Please try again.', Date.now());
+            }
+        }
+
+        // Load a specific session
+        async function loadSession(session) {
+            sessionId = session;
+            chatBox.innerHTML = '';
+            (chatSessions[session].messages || []).forEach(msg => addMessage(msg.role, msg.content, msg.timestamp));
+            chatBox.scrollTop = chatBox.scrollHeight;
+            await loadChatHistory();
+            updateRecommendedQuestions();
+        }
+
+        // Add message to chat box
+        function addMessage(role, content, timestamp) {
+            const div = document.createElement('div');
+            div.className = `chat-message ${role === 'user' ? 'user-message' : 'assistant-message'}`;
+            const formattedContent = content.replace(/\[BOLD\](.*?)\[BOLD\]/g, '<b>$1</b>');
+            div.innerHTML = `
+                <p>${formattedContent}</p>
+                <p class="text-xs text-gray-500">${new Date(timestamp).toLocaleTimeString()}</p>
+            `;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Update recommended questions
+        function updateRecommendedQuestions() {
+            questionList.innerHTML = '';
+            recommendedQuestions.forEach(question => {
+                const li = document.createElement('li');
+                li.className = 'p-2 bg-blue-200 rounded cursor-pointer hover:bg-blue-300';
+                li.textContent = question.length > 50 ? question.substring(0, 47) + '...' : question;
+                li.title = question;
+                li.onclick = () => {
+                    chatInput.value = question;
+                    sendMessage(question);
+                    navigateTo('chat');
+                };
+                questionList.appendChild(li);
+            });
+        }
+
+        // Send message to backend
+        async function sendMessage(text = chatInput.value) {
+            if (!text.trim() || isSending) return;
+            isSending = true;
+            sendButton.disabled = true;
+            sendButton.classList.add('opacity-50', 'cursor-not-allowed');
+            chatInput.disabled = true;
+            addMessage('user', text, Date.now());
+            chatInput.value = 'Processing...';
+
+            try {
+                const response = await axios.post('/api/chat', {
+                    message: text,
+                    language: currentLanguage,
+                    input_mode: currentInputMode,
+                    output_mode: currentOutputMode,
+                    session_id: sessionId
+                });
+                addMessage('assistant', response.data.response, Date.now());
+                if (response.data.suggestions) {
+                    recommendedQuestions = response.data.suggestions;
+                    updateRecommendedQuestions();
+                }
+                if (response.data.audio_data && (currentOutputMode === 'voice' || currentOutputMode === 'both')) {
+                    try {
+                        const audio = new Audio(`data:audio/mpeg;base64,${response.data.audio_data}`);
+                        audio.play().catch(err => {
+                            console.error('Audio playback error:', err);
+                            addMessage('assistant', 'Failed to play audio response.', Date.now());
+                        });
+                    } catch (audioError) {
+                        console.error('Error initializing audio:', audioError);
+                        addMessage('assistant', 'Failed to play audio response.', Date.now());
+                    }
+                }
+                await loadChatHistory();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                const errorMsg = error.response?.data?.detail || 'Error processing your request. Please try again.';
+                addMessage('assistant', errorMsg, Date.now());
+            } finally {
+                isSending = false;
+                sendButton.disabled = false;
+                sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                chatInput.disabled = false;
+                chatInput.value = '';
+            }
+        }
+
+        // Handle microphone input
+        micButton.addEventListener('click', () => {
+            if (currentInputMode !== 'voice' || !recognition) return;
+            recognition.lang = currentLanguage === 'english' ? 'en-US' :
+                             currentLanguage === 'tamil' ? 'ta-IN' :
+                             currentLanguage === 'telugu' ? 'te-IN' :
+                             currentLanguage === 'malay' ? 'ms-MY' :
+                             currentLanguage === 'thai' ? 'th-TH' :
+                             currentLanguage === 'chinese' ? 'zh-CN' :
+                             currentLanguage === 'singlish' ? 'en-SG' : 'en-US';
+            recognition.start();
+            micButton.classList.remove('bg-blue-500');
+            micButton.classList.add('bg-red-500');
+            chatInput.value = 'Listening...';
+        });
+
+        // Download chat as PDF
+        async function downloadChatAsPDF(mode = 'session') {
+            try {
+                let messages = [];
+                let filename = '';
+                if (mode === 'session') {
+                    messages = chatSessions[sessionId]?.messages || [];
+                    filename = `chat_session_${sessionId}.pdf`;
+                } else {
+                    Object.values(chatSessions).forEach(session => {
+                        messages = messages.concat(session.messages || []);
+                    });
+                    filename = 'all_chats.pdf';
+                }
+                if (!messages.length) {
+                    addMessage('assistant', 'No chat messages to download.', Date.now());
+                    return;
+                }
+                const response = await axios.post('/api/download_chat_pdf', { messages, mode }, { responseType: 'blob' });
+                const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error downloading PDF:', error);
+                addMessage('assistant', 'Failed to download chat as PDF. Please try again.', Date.now());
+            }
+        }
+
+        downloadChatButton.addEventListener('click', () => {
+            const menu = document.createElement('div');
+            menu.className = 'absolute bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10';
+            menu.innerHTML = `
+                <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" onclick="downloadChatAsPDF('session')">Download Current Session</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" onclick="downloadChatAsPDF('all')">Download All Chats</button>
+            `;
+            downloadChatButton.appendChild(menu);
+            setTimeout(() => {
+                document.addEventListener('click', () => menu.remove(), { once: true });
+            }, 0);
+        });
+
+        // Handle send button and enter key
+        sendButton.addEventListener('click', () => sendMessage());
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isSending) sendMessage();
+        });
+
+        // Initialize
+        navigateTo('home');
+        loadChatHistory();
+    </script>
+</body>
+</html>

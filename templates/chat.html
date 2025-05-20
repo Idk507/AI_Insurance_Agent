@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insurance Agent - Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+        header {
+            background-color: #7a9eff;
+            color: white;
+            z-index: 20;
+            height: 80px;
+        }
+        .bg-blue-100 { background-color: #dbeafe; }
+        .bg-blue-200 { background-color: #bfdbfe; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-blue-700 { background-color: #1e40af; }
+        .text-blue-500 { color: #3b82f6; }
+        .border-blue-300 { border-color: #93c5fd; }
+        .focus:ring-blue-500 { --tw-ring-color: #3b82f6; }
+        .sidebar {
+            width: 180px;
+            background-color: #dbeafe;
+            min-height: calc(100vh - 80px);
+            position: fixed;
+            top: 80px;
+            left: 0;
+            z-index: 10;
+            padding-top: 1rem;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+        .sidebar-item:hover { background-color: #bfdbfe; }
+        .sidebar-item.active { background-color: #3b82f6; color: white; }
+        .right-sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            min-height: calc(100vh - 80px);
+            position: fixed;
+            top: 80px;
+            right: 0;
+            z-index: 10;
+            overflow-y: auto;
+            padding: 1rem;
+            box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+        }
+        .smart-suggestions {
+            margin-top: 1rem;
+        }
+        .smart-suggestions h3 {
+            color: #3b82f6;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .suggestion-item {
+            background-color: #bfdbfe;
+            color: #1e40af;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 0.5rem;
+        }
+        .suggestion-item:hover { background-color: #93c5fd; }
+        .content-area {
+            margin-left: 180px;
+            margin-right: 250px;
+            margin-top: 80px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 80px);
+            max-height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+        .logo { max-height: 40px; width: auto; }
+        .interactive-btn { transition: transform 0.2s; }
+        .interactive-btn:hover { transform: scale(1.05); }
+        .chat-message {
+            max-width: 80%;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .user-message { background-color: #dbeafe; margin-left: auto; }
+        .assistant-message { background-color: #f3f4f6; font-size: 1rem; font-weight: normal; }
+        #chatBox { flex: 1; overflow-y: auto; padding: 1.5rem; background-color: #ffffff; }
+        #chatBox p { white-space: pre-wrap; word-break: break-word; }
+        .input-container {
+            padding: 1rem;
+            background-color: #dbeafe;
+            border-top: 1px solid #bfdbfe;
+        }
+        .mic-active { animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 640px) {
+            header { flex-direction: column; align-items: center; padding: 0.5rem; height: auto; }
+            .sidebar { width: 100%; position: static; min-height: auto; top: auto; padding-top: 0.5rem; }
+            .right-sidebar { display: none; width: 100%; position: static; min-height: auto; top: auto; padding: 0.5rem; margin-top: 0; }
+            .right-sidebar.active { display: block; width: 100%; position: static; min-height: auto; padding: 0.5rem; margin-top: 0; }
+            .content-area { margin-left: 0; margin-right: 0; margin-top: 0; }
+            .suggestion-item { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+            .input-container { padding: 0.5rem; }
+            .chat-message { max-width: 90%; }
+            #chatBox { padding: 1rem; }
+            .logo { max-height: 30px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Top Header Bar -->
+    <header class="p-4 flex justify-between items-center shadow-md fixed w-full top-0">
+        <div class="flex items-center">
+            <img src="/static/images/beeonix.png" alt="Beeonix Logo" class="logo mr-4">
+        </div>
+        <div class="flex items-center justify-center flex-1">
+            <h1 class="text-lg font-bold">AI Insurance Agent</h1>
+        </div>
+        <div class="flex items-center">
+            <img src="/static/images/Bigtapplogo.png" alt="Bigtapp Analytics Logo" class="logo">
+        </div>
+    </header>
+
+    <!-- Left Sidebar -->
+    <div class="sidebar flex flex-col">
+        <div class="sidebar-item" data-page="home">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Home
+        </div>
+        <div class="sidebar-item" data-page="conversations">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            Conversations
+        </div>
+        <div class="sidebar-item" data-page="settings">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            Settings
+        </div>
+        <div class="sidebar-item" data-page="knowledge">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+            Knowledge
+        </div>
+        <div class="sidebar-item active" data-page="chat" id="newChatButton">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            New Chat
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+        <div class="smart-suggestions">
+            <h3>Smart Suggestions</h3>
+            <div id="smartSuggestions"></div>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <div id="chatBox"></div>
+            <div class="input-container flex items-center space-x-2 flex-wrap gap-2">
+                <!-- Language Selector -->
+                <div class="relative">
+                    <button id="languageButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 004 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                    <div id="languageMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="english">English</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="tamil">Tamil</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="telugu">Telugu</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="malay">Malay</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="thai">Thai</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="chinese">Chinese</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-lang="singlish">Singlish</button>
+                    </div>
+                </div>
+                <!-- Input Mode Selector -->
+                <div class="relative">
+                    <button id="inputModeButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                    <div id="inputModeMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="text">Text</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="voice">Speech-to-Text</button>
+                    </div>
+                </div>
+                <!-- Output Mode Selector -->
+                <div class="relative">
+                    <button id="outputModeButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                    </button>
+                    <div id="outputModeMenu" class="absolute hidden bottom-12 bg-blue-700 text-white rounded-lg shadow-lg z-10">
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="text">Text</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="voice">Text-to-Speech</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-blue-600" data-mode="both">Both</button>
+                    </div>
+                </div>
+                <!-- Chat Input -->
+                <input id="chatInput" type="text" class="flex-1 p-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ask about insurance..." />
+                <!-- Microphone Button -->
+                <button id="micButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                </button>
+                <!-- Send Button -->
+                <button id="sendButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </button>
+                <!-- Download Chat Button -->
+                <button id="downloadChatButton" class="p-2 bg-blue-500 text-white rounded-full shadow-md interactive-btn" title="Download Chat as PDF">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+            </div>
+            <!-- Status Message -->
+            <p id="statusMessage" class="text-sm text-gray-500 px-4 pt-2"></p>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const micButton = document.getElementById('micButton');
+        const languageButton = document.getElementById('languageButton');
+        const languageMenu = document.getElementById('languageMenu');
+        const inputModeButton = document.getElementById('inputModeButton');
+        const inputModeMenu = document.getElementById('inputModeMenu');
+        const outputModeButton = document.getElementById('outputModeButton');
+        const outputModeMenu = document.getElementById('outputModeMenu');
+        const newChatButton = document.getElementById('newChatButton');
+        const downloadChatButton = document.getElementById('downloadChatButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const smartSuggestions = document.getElementById('smartSuggestions');
+        const rightSidebar = document.querySelector('.right-sidebar');
+        let recognition = null;
+        let sessionId = Date.now().toString();
+        let chatSessions = {};
+        let currentLanguage = localStorage.getItem('language') || 'english';
+        let currentInputMode = localStorage.getItem('inputMode') || 'text';
+        let currentOutputMode = localStorage.getItem('outputMode') || 'text';
+        let isSending = false;
+
+        // Language code mapping for speech recognition
+        const languageCodes = {
+            'english': 'en-US',
+            'tamil': 'ta-IN',
+            'telugu': 'te-IN',
+            'malay': 'ms-MY',
+            'thai': 'th-TH',
+            'chinese': 'zh-CN',
+            'singlish': 'en-SG'
+        };
+
+        // Apply theme
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.body.className = theme === 'dark' ? 'bg-gray-900 text-white flex flex-col min-h-screen' : 'bg-white text-black flex flex-col min-h-screen';
+            document.querySelector('.sidebar').className = theme === 'dark' ? 'sidebar flex flex-col bg-gray-800' : 'sidebar flex flex-col bg-blue-100';
+            document.querySelector('.right-sidebar').className = theme === 'dark' ? 'right-sidebar bg-gray-800' : 'right-sidebar bg-white';
+            document.querySelector('.content-area').className = theme === 'dark' ? 'content-area bg-gray-900' : 'content-area';
+            document.querySelector('header').className = theme === 'dark' ? 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-gray-700' : 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-blue-500';
+            chatBox.className = theme === 'dark' ? 'flex-1 overflow-y-auto p-4 bg-gray-900' : 'flex-1 overflow-y-auto p-4 bg-white';
+            document.querySelector('.input-container').className = theme === 'dark' ? 'input-container flex items-center space-x-2 flex-wrap gap-2 bg-gray-800 border-t border-gray-700' : 'input-container flex items-center space-x-2 flex-wrap gap-2 bg-blue-100 border-t border-blue-200';
+        }
+        applyTheme();
+
+        // Initialize Web Speech API
+        function initializeSpeechRecognition() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = languageCodes[currentLanguage] || 'en-US';
+                
+                recognition.onstart = () => {
+                    micButton.classList.remove('bg-blue-500');
+                    micButton.classList.add('bg-red-500', 'mic-active');
+                    chatInput.value = 'Listening...';
+                    chatInput.disabled = true;
+                };
+
+                recognition.onresult = (event) => {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    chatInput.value = transcript;
+                    if (event.results[event.results.length - 1].isFinal) {
+                        recognition.stop();
+                        if (transcript.trim()) {
+                            sendMessage(transcript);
+                        } else {
+                            chatInput.value = '';
+                            chatInput.disabled = false;
+                        }
+                    }
+                };
+
+                recognition.onend = () => {
+                    micButton.classList.remove('bg-red-500', 'mic-active');
+                    micButton.classList.add('bg-blue-500');
+                    if (chatInput.value === 'Listening...' || !chatInput.value.trim()) {
+                        chatInput.value = '';
+                        chatInput.disabled = false;
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error(`Speech recognition error: ${event.error}`);
+                    micButton.classList.remove('bg-red-500', 'mic-active');
+                    micButton.classList.add('bg-blue-500');
+                    chatInput.value = '';
+                    chatInput.disabled = false;
+                    if (event.error === 'not-allowed') {
+                        console.warn('Microphone access denied. Please enable microphone permissions.');
+                    } else if (event.error === 'no-speech') {
+                        console.warn('No speech detected. Please try again.');
+                    }
+                };
+            } else {
+                console.warn('Speech recognition is not supported in this browser.');
+                micButton.disabled = true;
+                micButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        initializeSpeechRecognition();
+
+        // Toggle dropdown menus
+        function toggleMenu(menu) {
+            menu.classList.toggle('hidden');
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!languageButton.contains(e.target) && !languageMenu.contains(e.target)) languageMenu.classList.add('hidden');
+            if (!inputModeButton.contains(e.target) && !inputModeMenu.contains(e.target)) inputModeMenu.classList.add('hidden');
+            if (!outputModeButton.contains(e.target) && !outputModeMenu.contains(e.target)) outputModeMenu.classList.add('hidden');
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                if (page && page !== 'chat') {
+                    window.location.href = `${page}.html`;
+                } else if (item.id === 'newChatButton') {
+                    startNewChat();
+                }
+            });
+        });
+
+        // Language selection
+        languageMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentLanguage = button.dataset.lang;
+                localStorage.setItem('language', currentLanguage);
+                languageMenu.classList.add('hidden');
+                try {
+                    const response = await axios.post('http://localhost:8000/api/set_language', { language: currentLanguage, session_id: sessionId });
+                    console.log(`Language set to ${currentLanguage}:`, response.data);
+                    if (recognition) {
+                        recognition.lang = languageCodes[currentLanguage] || 'en-US';
+                    }
+                } catch (error) {
+                    console.error('Error setting language:', error);
+                }
+            });
+        });
+
+        // Input mode selection
+        inputModeMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentInputMode = button.dataset.mode;
+                localStorage.setItem('inputMode', currentInputMode);
+                inputModeMenu.classList.add('hidden');
+                try {
+                    const response = await axios.post('http://localhost:8000/api/set_input_mode', { mode: currentInputMode, session_id: sessionId });
+                    console.log(`Input mode set to ${currentInputMode}:`, response.data);
+                } catch (error) {
+                    console.error('Error setting input mode:', error);
+                }
+            });
+        });
+
+        // Output mode selection
+        outputModeMenu.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', async () => {
+                currentOutputMode = button.dataset.mode;
+                localStorage.setItem('outputMode', currentOutputMode);
+                outputModeMenu.classList.add('hidden');
+                try {
+                    const response = await axios.post('http://localhost:8000/api/set_output_mode', { mode: currentOutputMode, session_id: sessionId });
+                    console.log(`Output mode set to ${currentOutputMode}:`, response.data);
+                } catch (error) {
+                    console.error('Error setting output mode:', error);
+                }
+            });
+        });
+
+        // Button click handlers
+        languageButton.addEventListener('click', () => toggleMenu(languageMenu));
+        inputModeButton.addEventListener('click', () => toggleMenu(inputModeMenu));
+        outputModeButton.addEventListener('click', () => toggleMenu(outputModeMenu));
+
+        micButton.addEventListener('click', () => {
+            if (!recognition || micButton.disabled) return;
+            if (micButton.classList.contains('bg-blue-500')) {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error('Error starting speech recognition:', error);
+                    micButton.classList.remove('bg-red-500', 'mic-active');
+                    micButton.classList.add('bg-blue-500');
+                    chatInput.value = '';
+                    chatInput.disabled = false;
+                }
+            } else {
+                recognition.stop();
+            }
+        });
+
+        sendButton.addEventListener('click', () => sendMessage());
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isSending) {
+                sendMessage();
+            }
+        });
+
+        downloadChatButton.addEventListener('click', async () => {
+            statusMessage.textContent = 'Generating PDF...';
+            statusMessage.classList.remove('text-green-500', 'text-red-500');
+            statusMessage.classList.add('text-gray-500');
+            downloadChatButton.disabled = true;
+            downloadChatButton.classList.add('opacity-50', 'cursor-not-allowed');
+            try {
+                const response = await axios.get('http://localhost:8000/api/download_chat', {
+                    params: { session_id: sessionId },
+                    responseType: 'blob'
+                });
+                const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `chat_session_${sessionId}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                statusMessage.textContent = 'Chat downloaded as PDF';
+                statusMessage.classList.remove('text-gray-500', 'text-red-500');
+                statusMessage.classList.add('text-green-500');
+            } catch (error) {
+                console.error('Error downloading chat:', error);
+                statusMessage.textContent = error.response?.data?.detail || 'Failed to download chat';
+                statusMessage.classList.remove('text-gray-500', 'text-green-500');
+                statusMessage.classList.add('text-red-500');
+            } finally {
+                downloadChatButton.disabled = false;
+                downloadChatButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        // Start a new chat session
+        async function startNewChat() {
+            sessionId = Date.now().toString();
+            localStorage.setItem('currentSessionId', sessionId);
+            chatBox.innerHTML = '';
+            smartSuggestions.innerHTML = '';
+            rightSidebar.classList.remove('active');
+            statusMessage.textContent = '';
+            await loadChatHistory();
+        }
+
+        // Load chat history
+        async function loadChatHistory() {
+            try {
+                const response = await axios.get('http://localhost:8000/api/chat_history', { params: { session_id: sessionId } });
+                chatSessions = response.data.sessions || {};
+                if (!chatSessions[sessionId]) {
+                    chatSessions[sessionId] = { messages: [], summary: '', entities: {} };
+                }
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+                chatSessions = {};
+            }
+        }
+
+        // Load a specific session
+        async function loadSession(session) {
+            sessionId = session;
+            localStorage.setItem('currentSessionId', sessionId);
+            chatBox.innerHTML = '';
+            smartSuggestions.innerHTML = '';
+            rightSidebar.classList.remove('active');
+            statusMessage.textContent = '';
+            try {
+                const response = await axios.get('http://localhost:8000/api/chat_history', { params: { session_id: sessionId } });
+                const sessionData = response.data.sessions?.[session] || { messages: [] };
+                (sessionData.messages || []).forEach(msg => {
+                    if (msg.role && msg.content && msg.timestamp) {
+                        addMessage(msg.role, msg.content, msg.timestamp);
+                        if (msg.role === 'assistant' && msg.suggestions && Array.isArray(msg.suggestions)) {
+                            addSuggestionsBox(msg.suggestions, msg.timestamp);
+                        }
+                    }
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+                if (smartSuggestions.children.length > 0) {
+                    rightSidebar.classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error loading session:', error);
+            }
+        }
+
+        // Sanitize and format text, converting [BOLD] tags to <b> tags
+        function sanitizeHTML(text) {
+            console.log('Sanitizing text:', text); // Debug input
+            // Escape HTML characters to prevent XSS
+            const div = document.createElement('div');
+            div.textContent = text;
+            let sanitized = div.innerHTML;
+            
+            // Replace [BOLD] tags with <b> tags
+            sanitized = sanitized.replace(/\[BOLD\](.*?)\[\/BOLD\]/gi, '<b>$1</b>');
+            
+            console.log('Sanitized output:', sanitized); // Debug output
+            return sanitized;
+        }
+
+        // Add suggestions to right sidebar
+        function addSuggestionsBox(suggestions, timestamp) {
+            console.log('Adding suggestions:', suggestions);
+            smartSuggestions.innerHTML = '';
+            if (Array.isArray(suggestions) && suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    if (typeof suggestion === 'string' && suggestion.trim().length > 0) {
+                        const item = document.createElement('div');
+                        item.className = 'suggestion-item';
+                        item.innerHTML = sanitizeHTML(suggestion);
+                        item.onclick = () => {
+                            chatInput.value = suggestion;
+                            sendMessage(suggestion);
+                        };
+                        smartSuggestions.appendChild(item);
+                    }
+                });
+                rightSidebar.classList.add('active');
+            } else {
+                console.log('No valid suggestions to display');
+                rightSidebar.classList.remove('active');
+            }
+        }
+
+        // Add message to chat box
+        function addMessage(role, content, timestamp) {
+            const div = document.createElement('div');
+            div.className = `chat-message ${role === 'user' ? 'user-message' : 'assistant-message'}`;
+            const formattedContent = sanitizeHTML(content);
+            div.innerHTML = `
+                <p>${formattedContent}</p>
+                <p class="text-xs text-gray-500">${new Date(timestamp).toLocaleTimeString()}</p>
+            `;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Send message to backend
+        async function sendMessage(text = chatInput.value) {
+            if (!text.trim() || isSending) return;
+            isSending = true;
+            sendButton.disabled = true;
+            sendButton.classList.add('opacity-50', 'cursor-not-allowed');
+            chatInput.disabled = true;
+            addMessage('user', text, Date.now());
+            chatInput.value = 'Processing...';
+
+            try {
+                const response = await axios.post('http://localhost:8000/api/chat', {
+                    message: text,
+                    language: currentLanguage,
+                    input_mode: currentInputMode,
+                    output_mode: currentOutputMode,
+                    session_id: sessionId
+                });
+                const cleanResponse = response.data.response.split("You might want to ask")[0].trim();
+                addMessage('assistant', cleanResponse, Date.now());
+                addSuggestionsBox(response.data.suggestions || [], Date.now());
+                if (response.data.audio_data && (currentOutputMode === 'voice' || currentOutputMode === 'both')) {
+                    const audio = new Audio(`data:audio/mpeg;base64,${response.data.audio_data}`);
+                    audio.play().catch(err => {
+                        console.error('Audio playback error:', err);
+                    });
+                }
+                await loadChatHistory();
+            } catch (error) {
+                console.error('Error sending message:', error);
+            } finally {
+                chatInput.value = '';
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                isSending = false;
+            }
+        }
+
+        // Initialize
+        async function initialize() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const session = urlParams.get('session');
+            const isNewChat = localStorage.getItem('newChat') === 'true';
+            if (isNewChat) {
+                localStorage.removeItem('newChat');
+                await startNewChat();
+            } else if (session) {
+                await loadSession(session);
+            } else {
+                await loadChatHistory();
+            }
+        }
+        initialize();
+    </script>
+</body>
+</html>
