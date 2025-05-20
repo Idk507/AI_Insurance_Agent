@@ -1,0 +1,58 @@
+{
+  "product_qa_1747731504956": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "[Context: product_qa] hi",
+        "timestamp": "2025-05-20T14:28:33.794521",
+        "language": "english"
+      },
+      {
+        "role": "assistant",
+        "content": "Hi! How can I assist you today? If you’re looking for information about our insurance products, feel free to ask. For example, you can ask about [BOLD]policy types[BOLD], [BOLD]key benefits[BOLD], or [BOLD]premium payments[BOLD]. Let me know what you’d like to know!",
+        "timestamp": "2025-05-20T14:28:33.794521",
+        "language": "english",
+        "suggestions": [
+          "What types of insurance policies do you offer?",
+          "Can you explain the key benefits of your life insurance plans?",
+          "How are premium payments structured for your policies?"
+        ]
+      }
+    ],
+    "summary": "The user initiated the conversation with a greeting, and the assistant responded by offering help with insurance-related queries, providing examples of topics such as policy types, benefits, and premium payments.",
+    "entities": {
+      "age": null,
+      "gender": null,
+      "location": null
+    },
+    "pending_intent": null
+  },
+  "product_qa_1747732735992": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "[Context: product_qa] hi",
+        "timestamp": "2025-05-20T14:49:23.303653",
+        "language": "english"
+      },
+      {
+        "role": "assistant",
+        "content": "Hi there! How can I help you today? If you're looking for details about our insurance plans, feel free to ask. For example, you can ask about [BOLD]policy types[BOLD], [BOLD]benefits[BOLD], or [BOLD]premium details[BOLD]. Let me know what you'd like to know!",
+        "timestamp": "2025-05-20T14:49:23.303653",
+        "language": "english",
+        "suggestions": [
+          "What types of insurance policies do you offer?",
+          "Can you explain the benefits of your life insurance plans?",
+          "How are premiums calculated for your health insurance policies?"
+        ]
+      }
+    ],
+    "summary": "The user initiated the conversation with a greeting, and the assistant responded by offering help with insurance-related inquiries, suggesting topics like policy types, benefits, and premium details.",
+    "entities": {
+      "age": null,
+      "gender": null,
+      "location": null
+    },
+    "pending_intent": null
+  }
+}

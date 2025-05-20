@@ -1,0 +1,17 @@
+fastapi==0.95.2
+uvicorn==0.22.0
+pydantic==1.10.7
+jinja2==3.1.2
+weaviate-client==3.15.0
+googletrans==4.0.0-rc1
+gtts==2.3.2
+SpeechRecognition==3.8.1
+pydub==0.25.1
+openai==0.27.8
+langchain==0.0.208
+langchain-core==0.0.208
+langchain-community==0.0.208
+aiofiles==23.1.0
+python-dotenv==1.0.0
+reportlab
+pdfplumber

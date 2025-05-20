@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeMate - Knowledge Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+        header {
+            background-color: #7a9eff;
+            color: white;
+            z-index: 20;
+            height: 80px;
+        }
+        .bg-blue-100 {
+            background-color: #dbeafe;
+        }
+        .bg-blue-200 {
+            background-color: #bfdbfe;
+        }
+        .bg-blue-500 {
+            background-color: #3b82f6;
+        }
+        .bg-blue-700 {
+            background-color: #1e40af;
+        }
+        .sidebar {
+            width: 180px;
+            background-color: #dbeafe;
+            min-height: calc(100vh - 80px);
+            position: fixed;
+            top: 80px;
+            left: 0;
+            z-index: 10;
+            padding-top: 1rem;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+        .sidebar-item:hover {
+            background-color: #bfdbfe;
+        }
+        .sidebar-item.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .content-area {
+            margin-left: 180px;
+            margin-top: 80px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 80px);
+            padding: 1.5rem;
+            background-color: #ffffff;
+        }
+        .logo {
+            max-height: 40px;
+            width: auto;
+        }
+        .interactive-btn {
+            transition: transform 0.2s;
+        }
+        .interactive-btn:hover {
+            transform: scale(1.05);
+        }
+        .table-container {
+            max-width: 800px;
+            margin-top: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #dbeafe;
+            font-weight: bold;
+        }
+        .delete-btn {
+            background-color: #ef4444;
+        }
+        @media (max-width: 640px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                min-height: auto;
+                top: auto;
+                padding-top: 0.5rem;
+            }
+            .content-area {
+                margin-left: 0;
+                margin-top: 0;
+                padding: 1rem;
+            }
+            .logo {
+                max-height: 30px;
+            }
+            .table-container {
+                margin-top: 0.5rem;
+            }
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Top Header Bar -->
+    <header class="p-4 flex justify-between items-center shadow-md fixed w-full top-0">
+        <div class="flex items-center">
+            <img src="/static/images/beeonix.png" alt="Beeonix Logo" class="logo mr-4">
+        </div>
+        <div class="flex items-center justify-center flex-1">
+            <h1 class="text-lg font-bold">BeeMate - Knowledge Management</h1>
+        </div>
+        <div class="flex items-center">
+            <img src="/static/images/Bigtapplogo.png" alt="Bigtapp Analytics Logo" class="logo">
+        </div>
+    </header>
+
+    <!-- Left Sidebar -->
+    <div class="sidebar flex flex-col">
+        <div class="sidebar-item" data-page="home">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Home
+        </div>
+        <div class="sidebar-item" data-page="conversations">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            Conversations
+        </div>
+        <div class="sidebar-item" data-page="settings">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            Settings
+        </div>
+        <div class="sidebar-item active" data-page="knowledge">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+            Knowledge
+        </div>
+        <div class="sidebar-item" data-page="customer_details">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+            Customer Details
+        </div>
+        <div class="sidebar-item" data-page="caravan">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            Insights
+        </div>
+        <div class="sidebar-item" data-page="product_qa">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Product Q&A
+        </div>
+        <div class="sidebar-item" data-page="chat" id="newChatButton">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            New Chat
+        </div>
+        <div class="sidebar-item" data-page="chat" id="returnChatButton">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Return to Chat
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Knowledge Management</h2>
+            <a href="chat.html" class="p-2 bg-blue-500 text-white rounded-md interactive-btn" id="chatButton">Chat with Documents</a>
+        </div>
+        <p class="text-sm text-gray-600 mb-4">Manage your uploaded insurance PDFs below.</p>
+        
+        <!-- Documents Table -->
+        <div class="table-container">
+            <table id="documentsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="documentsBody"></tbody>
+            </table>
+        </div>
+        <p id="statusMessage" class="text-sm text-gray-500 mt-4"></p>
+    </div>
+
+    <script>
+        // Apply theme
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.body.className = theme === 'dark' ? 'bg-gray-900 text-white flex flex-col min-h-screen' : 'bg-white text-black flex flex-col min-h-screen';
+            document.querySelector('.sidebar').className = theme === 'dark' ? 'sidebar flex flex-col bg-gray-800' : 'sidebar flex flex-col bg-blue-100';
+            document.querySelector('.content-area').className = theme === 'dark' ? 'content-area bg-gray-900 margin-left: 180px margin-top: 80px' : 'content-area bg-white margin-left: 180px margin-top: 80px';
+            document.querySelector('header').className = theme === 'dark' ? 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-gray-700' : 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-blue-500';
+            document.querySelector('table').className = theme === 'dark' ? 'w-full border-collapse bg-gray-800 border border-gray-700 rounded-md overflow-hidden' : 'w-full border-collapse bg-white border border-gray-200 rounded-md overflow-hidden';
+            document.querySelectorAll('th').forEach(th => {
+                th.className = theme === 'dark' ? 'p-3 text-left bg-gray-700 font-bold' : 'p-3 text-left bg-blue-100 font-bold';
+            });
+        }
+        applyTheme();
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                if (page) {
+                    if (page === 'chat' && item.id === 'newChatButton') {
+                        localStorage.setItem('newChat', 'true');
+                        window.location.href = 'chat.html';
+                    } else if (page === 'chat' && item.id === 'returnChatButton') {
+                        const sessionId = localStorage.getItem('currentSessionId') || '';
+                        window.location.href = `chat.html?session=${sessionId}`;
+                    } else {
+                        window.location.href = `${page}.html`;
+                    }
+                }
+            });
+        });
+
+        // Set active sidebar item
+        const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            if (item.dataset.page === currentPage && item.id !== 'newChatButton' && item.id !== 'returnChatButton') {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Load documents
+        async function loadDocuments() {
+            const documentsBody = document.getElementById('documentsBody');
+            const statusMessage = document.getElementById('statusMessage');
+            try {
+                const response = await axios.get('http://localhost:8000/api/list_documents');
+                documentsBody.innerHTML = '';
+                if (response.data.length === 0) {
+                    documentsBody.innerHTML = '<tr><td colspan="3" class="text-center p-3">No documents found</td></tr>';
+                    return;
+                }
+                response.data.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.title}</td>
+                        <td>${doc.id}</td>
+                        <td><button class="delete-btn p-2 text-white rounded-md interactive-btn" data-id="${doc.id}">Delete</button></td>
+                    `;
+                    documentsBody.appendChild(row);
+                });
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        if (confirm(`Are you sure you want to delete document '${id}'?`)) {
+                            try {
+                                const response = await axios.delete(`http://localhost:8000/api/delete_document/${id}`);
+                                statusMessage.textContent = response.data.message;
+                                statusMessage.classList.add('text-green-500');
+                                statusMessage.classList.remove('text-red-500');
+                                loadDocuments();
+                            } catch (error) {
+                                statusMessage.textContent = error.response?.data?.detail || 'Failed to delete document';
+                                statusMessage.classList.add('text-red-500');
+                                statusMessage.classList.remove('text-green-500');
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                statusMessage.textContent = error.response?.data?.detail || 'Failed to load documents';
+                statusMessage.classList.add('text-red-500');
+                statusMessage.classList.remove('text-green-500');
+            }
+        }
+        loadDocuments();
+
+        // Chat button
+        document.getElementById('chatButton').addEventListener('click', () => {
+            localStorage.setItem('newChat', 'true');
+            window.location.href = 'chat.html';
+        });
+    </script>
+</body>
+</html>
