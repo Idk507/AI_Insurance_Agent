@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent BuddyBee - Customer 360</title>
+    <!-- Define the dynamic API base URL -->
+    <script>
+        window.API_BASE_URL = window.location.origin + '/api';
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+        header {
+            background-color: #7a9eff;
+            color: white;
+            z-index: 20;
+            height: 80px;
+        }
+        .bg-blue-100 { background-color: #dbeafe; }
+        .bg-blue-200 { background-color: #bfdbfe; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-blue-700 { background-color: #1e40af; }
+        .text-blue-500 { color: #3b82f6; }
+        .border-blue-300 { border-color: #93c5fd; }
+        .focus:ring-blue-500 { --tw-ring-color: #3b82f6; }
+        .sidebar {
+            width: 180px;
+            background-color: #dbeafe;
+            min-height: calc(100vh - 80px);
+            position: fixed;
+            top: 80px;
+            left: 0;
+            z-index: 10;
+            padding-top: 1rem;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+        .sidebar-item:hover { background-color: #bfdbfe; }
+        .sidebar-item.active { background-color: #3b82f6; color: white; }
+        .content-area {
+            margin-left: 180px;
+            margin-top: 80px;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        .logo { max-height: 40px; width: auto; }
+        .customer-list { max-height: 60vh; overflow-y: auto; }
+        .customer-item { padding: 0.75rem; cursor: pointer; }
+        .customer-item:hover { background-color: #bfdbfe; }
+        .customer-item.active { background-color: #e0f2fe; }
+        .interactive-btn { transition: transform 0.2s; }
+        .interactive-btn:hover { transform: scale(1.05); }
+        .button-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .card {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .chart-container {
+            position: relative;
+            max-width: 100%;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .recommendation-item, .trait-item {
+            background-color: #dbeafe;
+            color: #1e40af;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .recommendation-item:hover, .trait-item:hover {
+            background-color: #bfdbfe;
+            cursor: pointer;
+        }
+        .feedback-container { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .feedback-icon { cursor: pointer; width: 24px; height: 24px; transition: transform 0.2s; }
+        .feedback-icon:hover { transform: scale(1.2); }
+        .feedback-icon.liked { fill: #10b981; }
+        .feedback-icon.disliked { fill: #ef4444; }
+        .bee-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 30;
+        }
+        .bee-animation img {
+            width: 100px;
+            height: 100px;
+        }
+        @media (max-width: 640px) {
+            header { flex-direction: column; align-items: center; padding: 0.5rem; height: auto; }
+            .sidebar { width: 100%; position: static; min-height: auto; top: auto; padding-top: 0.5rem; }
+            .content-area { margin-left: 0; margin-top: 0; padding: 1rem; }
+            .logo { max-height: 30px; }
+            .customer-list { max-height: 40vh; }
+            .button-group { gap: 0.5rem; }
+            .card { padding: 1rem; }
+            .chart-container { padding: 0.5rem; }
+            .bee-animation img {
+                width: 80px;
+                height: 80px;
+            }
+            .feedback-icon { width: 20px; height: 20px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Top Header Bar -->
+    <header class="p-4 flex justify-between items-center shadow-md fixed w-full top-0">
+        <div class="flex items-center">
+            <img src="/static/images/beeonix.png" alt="Beeonix Logo" class="logo mr-4">
+        </div>
+        <div class="flex items-center justify-center flex-1">
+            <h1 class="text-lg font-bold">Agent BuddyBee - Customer 360</h1>
+        </div>
+        <div class="flex items-center">
+            <img src="/static/images/Bigtapplogo.png" alt="Bigtapp Analytics Logo" class="logo">
+        </div>
+    </header>
+
+    <!-- Left Sidebar -->
+    <div class="sidebar flex flex-col">
+        <div class="sidebar-item" data-page="home">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Home
+        </div>
+        <div class="sidebar-item active" data-page="customer_details">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+            Customer Details
+        </div>
+        <div class="sidebar-item" data-page="product_qa">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Product Q&A
+        </div>
+        <div class="sidebar-item" data-page="knowledge">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+            Knowledge
+        </div>
+        <div class="sidebar-item" data-page="insights">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            Insights
+        </div>
+        <div class="sidebar-item" data-page="conversations">
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="Communication / Chat_Conversation">
+                    <path id="Vector"
+                        d="M16 8H20C20.5523 8 21 8.44772 21 9V20L17.667 17.231C17.4875 17.0818 17.2608 17 17.0273 17H9C8.44771 17 8 16.5523 8 16V13M16 8V5C16 4.44772 15.5523 4 15 4H4C3.44772 4 3 4.44772 3 5V16.0003L6.33301 13.2308C6.51255 13.0817 6.73924 13 6.97266 13H8M16 8V12C16 12.5523 15.5523 13 15 13H8"
+                        stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+            </svg>
+            Conversations
+        </div>
+        <div class="sidebar-item" data-page="settings">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            Settings
+        </div>
+        <div class="sidebar-item" data-page="home" id="currentChatButton">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Current Chat
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <h2 class="text-2xl font-bold text-blue-700 mb-4">Customer 360</h2>
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row gap-6">
+            <!-- Customer List -->
+            <div class="md:w-1/3">
+                <h3 class="text-lg font-semibold mb-2">Customers</h3>
+                <div id="customerList" class="customer-list"></div>
+            </div>
+            <!-- Customer Profile -->
+            <div class="md:w-2/3">
+                <div id="customerProfile" class="mb-6 hidden">
+                    <h3 class="text-lg font-semibold mb-2">Customer Profile</h3>
+                    <div id="profileContent" class="bg-gray-100 p-4 rounded-md"></div>
+                    <div id="toggleButtonContainer" class="mt-2"></div>
+                    <div class="button-group mt-4">
+                        <button id="chatButton" class="p-2 bg-blue-500 text-white rounded-md interactive-btn flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                            Chat about this Customer
+                        </button>
+                        <button id="insightsButton" class="p-2 bg-blue-500 text-white rounded-md interactive-btn flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            View Insights
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Dashboard Section -->
+        <div id="insightsDashboard" class="mt-6 hidden">
+            <h2 class="text-2xl font-bold text-blue-500 mb-6">Customer Insights Dashboard</h2>
+            <div id="errorMessage" class="text-red-500 mb-4 hidden"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Customer Summary Panel -->
+                <div class="card lg:col-span-1">
+                    <h3 class="text-lg font-bold text-blue-500 mb-4">Customer Summary</h3>
+                    <div id="customerSummary" class="space-y-3"></div>
+                </div>
+                <!-- Policy Details -->
+                <div class="card lg:col-span-2">
+                    <h3 class="text-lg font-bold text-blue-500 mb-4">Policy Details</h3>
+                    <div id="policyDetails" class="space-y-3"></div>
+                </div>
+                <!-- Visualizations Section -->
+                <div class="card lg:col-span-3">
+                    <h3 class="text-lg font-bold text-blue-500 mb-4">Policy Insights</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="chart-container" id="termComparisonChartContainer">
+                            <canvas id="termComparisonChart"></canvas>
+                        </div>
+                        <div class="chart-container" id="sumAssuredBreakdownChartContainer">
+                            <canvas id="sumAssuredBreakdownChart"></canvas>
+                        </div>
+                        <div class="chart-container" id="profileTraitsChartContainer">
+                            <canvas id="profileTraitsChart"></canvas>
+                        </div>
+                        <div class="chart-container" id="policyGoalChartContainer">
+                            <canvas id="policyGoalChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Traits -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bee Animation -->
+    <div class="bee-animation" id="beeAnimation">
+        <img src="/static/images/bee.gif" alt="Fluttering Bee">
+    </div>
+
+    <script>
+        // Define the API base URL with a fallback
+        const API_BASE = window.API_BASE_URL || 'http://localhost:8000/api';
+
+        const customerList = document.getElementById('customerList');
+        const customerProfile = document.getElementById('customerProfile');
+        const profileContent = document.getElementById('profileContent');
+        const chatButton = document.getElementById('chatButton');
+        const insightsButton = document.getElementById('insightsButton');
+        const insightsDashboard = document.getElementById('insightsDashboard');
+        const customerSummary = document.getElementById('customerSummary');
+        const policyDetails = document.getElementById('policyDetails');
+        const termComparisonChartCanvas = document.getElementById('termComparisonChart');
+        const sumAssuredBreakdownChartCanvas = document.getElementById('sumAssuredBreakdownChart');
+        const profileTraitsChartCanvas = document.getElementById('profileTraitsChart');
+        const policyGoalChartCanvas = document.getElementById('policyGoalChart');
+        const errorMessage = document.getElementById('errorMessage');
+        const termComparisonChartContainer = document.getElementById('termComparisonChartContainer');
+        const sumAssuredBreakdownChartContainer = document.getElementById('sumAssuredBreakdownChartContainer');
+        const profileTraitsChartContainer = document.getElementById('profileTraitsChartContainer');
+        const policyGoalChartContainer = document.getElementById('policyGoalChartContainer');
+        const beeAnimation = document.getElementById('beeAnimation');
+        const toggleButtonContainer = document.getElementById('toggleButtonContainer');
+        let selectedCustomerId = null;
+        let termComparisonChart, sumAssuredBreakdownChart, profileTraitsChart, policyGoalChart;
+        let allCustomers = [];
+        let displayedCustomersCount = 10;
+        const customersIncrement = 10;
+
+        // Apply theme
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.body.className = theme === 'dark' ? 'bg-gray-900 text-white flex flex-col min-h-screen' : 'bg-white text-black flex flex-col min-h-screen';
+            document.querySelector('.sidebar').className = theme === 'dark' ? 'sidebar flex flex-col bg-gray-800' : 'sidebar flex flex-col bg-blue-100';
+            document.querySelector('.content-area').className = theme === 'dark' ? 'content-area bg-gray-900' : 'content-area';
+            document.querySelector('header').className = theme === 'dark' ? 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-gray-700' : 'p-4 flex justify-between items-center shadow-md fixed w-full top-0 bg-blue-500';
+        }
+        applyTheme();
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                if (page) {
+                    if (page === 'home' && item.id === 'currentChatButton') {
+                        const sessionId = localStorage.getItem('currentSessionId') || '';
+                        window.location.href = `home.html?session=${sessionId}`;
+                    } else {
+                        window.location.href = `${page}.html`;
+                    }
+                }
+            });
+        });
+
+        // Fetch customers from API
+        async function fetchCustomers() {
+            try {
+                beeAnimation.style.display = 'block';
+                const response = await axios.get(`${API_BASE}/customers`);
+                // The API now returns { customers: [...] }
+                return response.data.customers || [];
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+                errorMessage.classList.remove('hidden');
+                errorMessage.textContent = 'Failed to load customers. Please try again.';
+                return [];
+            } finally {
+                beeAnimation.style.display = 'none';
+            }
+        }
+
+        // Display customer list with a "Load More" button
+        async function displayCustomerList(loadMore = false) {
+            if (allCustomers.length === 0) {
+                allCustomers = await fetchCustomers();
+            }
+
+            if (loadMore) {
+                displayedCustomersCount += customersIncrement;
+            }
+
+            customerList.innerHTML = ''; // Clear the list before rendering
+
+            const customersToDisplay = allCustomers.slice(0, displayedCustomersCount);
+            customersToDisplay.forEach(customer => {
+                const div = document.createElement('div');
+                div.className = `customer-item ${selectedCustomerId === customer.customer_id ? 'active' : ''}`;
+                div.textContent = `${customer.customer_id}: ${customer.details?.Name || 'N/A'}`;
+                div.addEventListener('click', () => selectCustomer(customer));
+                customerList.appendChild(div);
+            });
+
+            // Add a "Load More" button if there are more customers to show
+            if (displayedCustomersCount < allCustomers.length) {
+                const loadMoreButton = document.createElement('button');
+                loadMoreButton.textContent = 'Load More';
+                loadMoreButton.className = 'p-2 mt-2 bg-blue-500 text-white rounded-md interactive-btn w-full';
+                loadMoreButton.onclick = () => displayCustomerList(true);
+                customerList.appendChild(loadMoreButton);
+            }
+        }
+
+        // Helper function to parse monetary values
+        function parseMonetaryValue(value) {
+            if (!value || typeof value !== 'string') {
+                console.warn('parseMonetaryValue received invalid input:', value);
+                return 0;
+            }
+            const numericValue = value.replace(/[^0-9.-]+/g, '');
+            const parsed = parseFloat(numericValue);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        // Helper function to parse term values (e.g., "6 years" -> 6)
+        function parseTermValue(value) {
+            if (!value) {
+                console.warn('parseTermValue received invalid input:', value);
+                return 0;
+            }
+            if (typeof value === 'number') {
+                return value;
+            }
+            if (typeof value === 'string') {
+                const numericValue = value.replace(/[^0-9]+/g, '');
+                const parsed = parseInt(numericValue, 10);
+                return isNaN(parsed) ? 0 : parsed;
+            }
+            console.warn('parseTermValue received invalid type:', typeof value, value);
+            return 0;
+        }
+
+        // Sanitize text, converting [BOLD] tags to <b> tags
+        function sanitizeHTML(text) {
+            if (typeof text !== 'string') {
+                // Allow numbers to be sanitized by converting them to strings
+                if (typeof text === 'number') {
+                    text = text.toString();
+                } else {
+                    console.warn('sanitizeHTML received non-string input:', text);
+                    return '';
+                }
+            }
+            const div = document.createElement('div');
+            div.textContent = text;
+            let sanitized = div.innerHTML;
+            sanitized = sanitized.replace(/\[BOLD\](.*?)\[\/BOLD\]/gi, '<b>$1</b>');
+            sanitized = sanitized.replace(/\[BOLD\]|\[\/BOLD\]/gi, '');
+            return sanitized;
+        }
+
+        // Render customer summary
+        function renderCustomerSummary(customer) {
+            const details = customer.details || {};
+            const fields = [];
+            if (details.Name) fields.push({ label: 'Name', value: details.Name });
+            if (details.Age) fields.push({ label: 'Age', value: details.Age.toString() });
+            if (details.Occupation) fields.push({ label: 'Occupation', value: details.Occupation });
+
+            customerSummary.innerHTML = fields.map(field => `
+                <div class="flex items-center">
+                    <span class="font-bold text-gray-700 mr-2">${sanitizeHTML(field.label)}:</span>
+                    <span class="text-gray-600">${sanitizeHTML(field.value)}</span>
+                </div>
+            `).join('');
+        }
+
+        // Render policy details
+        function renderPolicyDetails(customer) {
+            const details = customer.details || {};
+            const fields = [];
+            if (details['Current Policy']) fields.push({ label: 'Policy Name', value: details['Current Policy'] });
+            if (details['Sum Assured']) fields.push({ label: 'Sum Assured', value: details['Sum Assured'] });
+            if (details['Premium Term']) fields.push({ label: 'Premium Term', value: details['Premium Term'] });
+            if (details['Coverage Term']) fields.push({ label: 'Coverage Term', value: details['Coverage Term'] });
+            if (details['Add-ons']) fields.push({ label: 'Add-ons', value: details['Add-ons'] });
+            if (details['Policy Goal']) fields.push({ label: 'Policy Goal', value: details['Policy Goal'] });
+
+            policyDetails.innerHTML = fields.map(field => `
+                <div class="flex items-center">
+                    <span class="font-bold text-gray-700 mr-2">${sanitizeHTML(field.label)}:</span>
+                    <span class="text-gray-600">${sanitizeHTML(field.value)}</span>
+                </div>
+            `).join('');
+        }
+
+        // Render visualizations
+        function renderVisualizations(customer) {
+            // Destroy existing charts if they exist
+            if (termComparisonChart) termComparisonChart.destroy();
+            if (sumAssuredBreakdownChart) sumAssuredBreakdownChart.destroy();
+            if (profileTraitsChart) profileTraitsChart.destroy();
+            if (policyGoalChart) policyGoalChart.destroy();
+
+            // Reset chart container visibility
+            termComparisonChartContainer.style.display = 'block';
+            sumAssuredBreakdownChartContainer.style.display = 'block';
+            profileTraitsChartContainer.style.display = 'block';
+            policyGoalChartContainer.style.display = 'block';
+
+            const details = customer.details || {};
+
+            // Policy Term Comparison Chart (Bar)
+            const premiumTerm = parseTermValue(details['Premium Term']);
+            const coverageTerm = parseTermValue(details['Coverage Term']);
+            if (premiumTerm > 0 && coverageTerm > 0) {
+                termComparisonChart = new Chart(termComparisonChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Premium Term', 'Coverage Term'],
+                        datasets: [{
+                            label: 'Years',
+                            data: [premiumTerm, coverageTerm],
+                            backgroundColor: ['#3b82f6', '#93c5fd'],
+                            borderColor: ['#1e40af', '#1e40af'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Policy Term Comparison', font: { size: 14 } }
+                        },
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Years', font: { size: 12 } },
+                                beginAtZero: true
+                            },
+                            y: { title: { display: false } }
+                        }
+                    }
+                });
+            } else {
+                termComparisonChartContainer.innerHTML = '<div class="text-gray-500 italic">Term data unavailable.</div>';
+            }
+
+            // Sum Assured Breakdown Chart (Pie)
+            const sumAssured = parseMonetaryValue(details['Sum Assured']);
+            const addOns = details['Add-ons'] ? details['Add-ons'].split(',').map(s => s.trim()) : [];
+            if (sumAssured > 0) {
+                const baseSum = sumAssured / (1 + 0.1 * addOns.length); // Assume each add-on adds 10% to base sum
+                const addOnValue = sumAssured - baseSum;
+                sumAssuredBreakdownChart = new Chart(sumAssuredBreakdownChartCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Base Sum Assured', 'Add-ons Contribution'],
+                        datasets: [{
+                            data: [baseSum, addOnValue],
+                            backgroundColor: ['#3b82f6', '#93c5fd'],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { size: 12 } } },
+                            title: { display: true, text: `Sum Assured Breakdown (${addOns.length} Add-ons)`, font: { size: 14 } }
+                        }
+                    }
+                });
+            } else {
+                sumAssuredBreakdownChartContainer.innerHTML = '<div class="text-gray-500 italic">Sum assured data unavailable.</div>';
+            }
+
+            // Profile Traits Distribution Chart (Bar)
+            let traits = [];
+            if (details['Profile Traits']) {
+                if (typeof details['Profile Traits'] === 'string') {
+                    traits = details['Profile Traits'].split(',').map(s => s.trim());
+                } else if (Array.isArray(details['Profile Traits'])) {
+                    traits = details['Profile Traits'];
+                }
+            }
+            if (traits.length > 0) {
+                const traitCounts = {};
+                traits.forEach(trait => {
+                    traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+                });
+                profileTraitsChart = new Chart(profileTraitsChartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(traitCounts),
+                        datasets: [{
+                            label: 'Count',
+                            data: Object.values(traitCounts),
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#1e40af',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Profile Traits Distribution', font: { size: 14 } }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 },
+                                title: { display: true, text: 'Count', font: { size: 12 } }
+                            },
+                            x: { title: { display: true, text: 'Traits', font: { size: 12 } } }
+                        }
+                    }
+                });
+            } else {
+                profileTraitsChartContainer.innerHTML = '<div class="text-gray-500 italic">Profile traits unavailable.</div>';
+            }
+
+            // Policy Goal Chart (Pie)
+            if (details['Policy Goal']) {
+                policyGoalChart = new Chart(policyGoalChartCanvas, {
+                    type: 'pie',
+                    data: {
+                        labels: [details['Policy Goal']],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['#3b82f6'],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { size: 12 } } },
+                            title: { display: true, text: 'Policy Goal', font: { size: 14 } }
+                        }
+                    }
+                });
+            } else {
+                policyGoalChartContainer.innerHTML = '<div class="text-gray-500 italic">Policy goal unavailable.</div>';
+            }
+        }
+
+        // Submit feedback to backend
+        async function submitFeedback(messageId, feedbackType) {
+            try {
+                const response = await axios.post(`${API_BASE}/submit_feedback`, {
+                    message_id: messageId,
+                    feedback: feedbackType,
+                    session_id: localStorage.getItem('currentSessionId') || ''
+                });
+                console.log(`Feedback submitted: ${feedbackType} for message ${messageId}`, response.data);
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                errorMessage.classList.remove('hidden');
+                errorMessage.textContent = 'Failed to submit feedback. Please try again.';
+            }
+        }
+
+        // Render customer profile with a toggle for details
+        function renderProfile(customer, showAll = false) {
+            const details = customer.details || {};
+            const allKeys = Object.keys(details);
+            
+            // Determine which keys to display
+            const keysToShow = showAll ? allKeys : allKeys.slice(0, 5); // Show first 5 as a summary
+
+            let html = `<p><strong>Customer ID:</strong> ${sanitizeHTML(customer.customer_id)}</p>`;
+            keysToShow.forEach(key => {
+                html += `<p><strong>${sanitizeHTML(key.replace(/_/g, ' '))}:</strong> ${sanitizeHTML(details[key] || 'N/A')}</p>`;
+            });
+
+            profileContent.innerHTML = html;
+
+            // Add 'Read More' / 'Show Less' button if necessary
+            toggleButtonContainer.innerHTML = ''; // Clear previous button
+
+            if (allKeys.length > 5) {
+                const button = document.createElement('button');
+                button.textContent = showAll ? 'Show Less' : 'Read More';
+                button.className = 'p-2 mt-2 bg-gray-200 text-black rounded-md interactive-btn';
+                button.onclick = () => renderProfile(customer, !showAll);
+                toggleButtonContainer.appendChild(button);
+            }
+        }
+
+        // Select customer and display profile
+        function selectCustomer(customer) {
+            selectedCustomerId = customer.customer_id;
+            customerProfile.classList.remove('hidden');
+            insightsDashboard.classList.add('hidden'); // Hide insights by default
+
+            // Initial render (summary view)
+            renderProfile(customer, false);
+
+            chatButton.onclick = () => {
+                window.location.href = `home.html?session=new&customer_id=${encodeURIComponent(selectedCustomerId)}`;
+            };
+
+            insightsButton.onclick = () => {
+                insightsDashboard.classList.toggle('hidden');
+                if (!insightsDashboard.classList.contains('hidden')) {
+                    renderCustomerSummary(customer);
+                    renderPolicyDetails(customer);
+                    renderVisualizations(customer);
+                }
+            };
+
+            // No need to call displayCustomerList here, as it's handled by selection.
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCustomerList();
+        });
+    </script>
+</body>
+</html>

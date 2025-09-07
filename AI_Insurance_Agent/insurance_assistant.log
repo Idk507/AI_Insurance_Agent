@@ -1,0 +1,290 @@
+2025-07-07 16:33:31,795 - INFO - User logout initiated
+2025-07-07 16:33:31,795 - INFO - Session cleared
+2025-07-07 16:33:31,795 - INFO - Redirecting to Azure AD logout with post_logout_redirect_uri: http://localhost:8000/
+2025-07-07 16:33:36,194 - INFO - Received request to serve home page
+2025-07-07 16:33:36,194 - INFO - User not authenticated, serving login page
+2025-07-07 16:33:37,515 - INFO - Initiating SSO login process
+2025-07-07 16:33:37,515 - INFO - Using redirect URI: http://localhost:8000/auth/callback
+2025-07-07 16:33:37,515 - INFO - Initiating auth flow with redirect_uri: http://localhost:8000/auth/callback
+2025-07-07 16:33:37,515 - INFO - Authorization flow initiated successfully
+2025-07-07 16:33:37,515 - INFO - Auth flow initiated and stored in session
+2025-07-07 16:33:37,515 - INFO - Redirecting to Azure AD for login
+2025-07-07 16:33:46,712 - INFO - Handling callback from Azure AD
+2025-07-07 16:33:46,712 - INFO - Acquiring token using auth code flow
+2025-07-07 16:33:46,712 - INFO - Acquiring token using auth code flow
+2025-07-07 16:33:47,399 - INFO - Token acquired successfully using auth code flow
+2025-07-07 16:33:47,399 - INFO - Token acquired successfully
+2025-07-07 16:33:47,399 - INFO - Storing user info in session: name=DhanushKumar R, email=dhanushkumar.r@bigtappanalytics.com
+2025-07-07 16:33:47,399 - INFO - Session after storing user: {'flow': {'state': 'dY3ihm10EtoBc6F1D0SDTA', 'redirect_uri': 'http://localhost:8000/auth/callback', 'scope': ['profile', 'openid', 'offline_access', 'User.Read', 'User.ReadBasic.All'], 'auth_uri': 'https://login.microsoftonline.com/9f2e2b7d-6081-4b3a-b7f5-433b581f6a5f/oauth2/v2.0/authorize?client_id=f8df195a-151f-44df-88ce-215640d63afe&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fcallback&scope=User.Read+User.ReadBasic.All+offline_access+openid+profile&state=dY3ihm10EtoBc6F1D0SDTA&code_challenge=HNOlU5gKwo-OBzyZRbplfMLEPF6C5crhnsDLM7VCcYg&code_challenge_method=S256&nonce=e38c950051e7cf2c233c5d437190b225c31c5ec25f64a7218f317298d8173c24&client_info=1', 'code_verifier': '-TiIhQg2sO6.o4Yaky5ZbzcX9pv_LSNJErUfe~dn1lC', 'nonce': 'cIsbGfxnmWVDdQzX'}, 'state': 'dY3ihm10EtoBc6F1D0SDTA', 'user': {'account': {}, 'name': 'DhanushKumar R', 'email': 'dhanushkumar.r@bigtappanalytics.com', 'authenticated': True, 'login_time': '2025-07-07T16:33:47.399507'}}
+2025-07-07 16:33:47,400 - INFO - Verification - Retrieved user from session: True
+2025-07-07 16:33:47,400 - INFO - Authentication successful, redirecting to home page
+2025-07-07 16:33:48,816 - INFO - Initiating SSO login process
+2025-07-07 16:33:48,817 - INFO - Using redirect URI: http://localhost:8000/auth/callback
+2025-07-07 16:33:48,817 - INFO - Initiating auth flow with redirect_uri: http://localhost:8000/auth/callback
+2025-07-07 16:33:48,817 - INFO - Authorization flow initiated successfully
+2025-07-07 16:33:48,817 - INFO - Auth flow initiated and stored in session
+2025-07-07 16:33:48,817 - INFO - Redirecting to Azure AD for login
+2025-07-07 16:33:51,595 - INFO - Handling callback from Azure AD
+2025-07-07 16:33:51,595 - INFO - Acquiring token using auth code flow
+2025-07-07 16:33:51,595 - INFO - Acquiring token using auth code flow
+2025-07-07 16:33:52,125 - INFO - Token acquired successfully using auth code flow
+2025-07-07 16:33:52,125 - INFO - Token acquired successfully
+2025-07-07 16:33:52,125 - INFO - Storing user info in session: name=DhanushKumar R, email=dhanushkumar.r@bigtappanalytics.com
+2025-07-07 16:33:52,125 - INFO - Session after storing user: {'user': {'account': {}, 'name': 'DhanushKumar R', 'email': 'dhanushkumar.r@bigtappanalytics.com', 'authenticated': True, 'login_time': '2025-07-07T16:33:52.125068'}, 'flow': {'state': '25X3D__5nzqyIj8FPz5G4w', 'redirect_uri': 'http://localhost:8000/auth/callback', 'scope': ['profile', 'openid', 'offline_access', 'User.Read', 'User.ReadBasic.All'], 'auth_uri': 'https://login.microsoftonline.com/9f2e2b7d-6081-4b3a-b7f5-433b581f6a5f/oauth2/v2.0/authorize?client_id=f8df195a-151f-44df-88ce-215640d63afe&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fcallback&scope=User.Read+User.ReadBasic.All+offline_access+openid+profile&state=25X3D__5nzqyIj8FPz5G4w&code_challenge=JfiOwluI_9W9CpWz5QosPi-kDM2aL8MTOUwvJK-bDlk&code_challenge_method=S256&nonce=1711ed117336ce5f5b8f4edbf43dad43891281fe3542c1a7cfd9b40286572825&client_info=1', 'code_verifier': 'd6qHFf-nrXYv2iSZO4~kPy8.bzwE5GaKBDmUhtsxlJu', 'nonce': 'MyXVbghvLeIwNCQZ'}, 'state': '25X3D__5nzqyIj8FPz5G4w'}
+2025-07-07 16:33:52,125 - INFO - Verification - Retrieved user from session: True
+2025-07-07 16:33:52,125 - INFO - Authentication successful, redirecting to home page
+2025-07-07 16:34:11,341 - INFO - Initiating SSO login process
+2025-07-07 16:34:11,341 - INFO - Using redirect URI: http://localhost:8000/auth/callback
+2025-07-07 16:34:11,341 - INFO - Initiating auth flow with redirect_uri: http://localhost:8000/auth/callback
+2025-07-07 16:34:11,342 - INFO - Authorization flow initiated successfully
+2025-07-07 16:34:11,342 - INFO - Auth flow initiated and stored in session
+2025-07-07 16:34:11,342 - INFO - Redirecting to Azure AD for login
+2025-07-07 16:34:12,948 - INFO - Handling callback from Azure AD
+2025-07-07 16:34:12,948 - INFO - Acquiring token using auth code flow
+2025-07-07 16:34:12,948 - INFO - Acquiring token using auth code flow
+2025-07-07 16:34:13,506 - INFO - Token acquired successfully using auth code flow
+2025-07-07 16:34:13,506 - INFO - Token acquired successfully
+2025-07-07 16:34:13,506 - INFO - Storing user info in session: name=DhanushKumar R, email=dhanushkumar.r@bigtappanalytics.com
+2025-07-07 16:34:13,506 - INFO - Session after storing user: {'user': {'account': {}, 'name': 'DhanushKumar R', 'email': 'dhanushkumar.r@bigtappanalytics.com', 'authenticated': True, 'login_time': '2025-07-07T16:34:13.506625'}, 'flow': {'state': 'uh5T9q2t2VsryZFElgO3Uw', 'redirect_uri': 'http://localhost:8000/auth/callback', 'scope': ['profile', 'openid', 'offline_access', 'User.Read', 'User.ReadBasic.All'], 'auth_uri': 'https://login.microsoftonline.com/9f2e2b7d-6081-4b3a-b7f5-433b581f6a5f/oauth2/v2.0/authorize?client_id=f8df195a-151f-44df-88ce-215640d63afe&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fcallback&scope=User.Read+User.ReadBasic.All+offline_access+openid+profile&state=uh5T9q2t2VsryZFElgO3Uw&code_challenge=X3I-piEpzTYG2POCS9ERc731UzWVUq7U8GidbYMEVg8&code_challenge_method=S256&nonce=7bfa439869aa4070b17137439fc998b57e586af9919c8f7d6051293895e4c91f&client_info=1', 'code_verifier': '1yhfzCT0DpqjYvZJI4rwKt-sGg.8dMEeaUkmXB2cOWQ', 'nonce': 'sRLFjIcQrKGmuyUk'}, 'state': 'uh5T9q2t2VsryZFElgO3Uw'}
+2025-07-07 16:34:13,506 - INFO - Verification - Retrieved user from session: True
+2025-07-07 16:34:13,506 - INFO - Authentication successful, redirecting to home page
+2025-07-07 16:34:59,333 - INFO - Initiating SSO login process
+2025-07-07 16:34:59,333 - INFO - Using redirect URI: http://localhost:8000/auth/callback
+2025-07-07 16:34:59,333 - INFO - Initiating auth flow with redirect_uri: http://localhost:8000/auth/callback
+2025-07-07 16:34:59,334 - INFO - Authorization flow initiated successfully
+2025-07-07 16:34:59,334 - INFO - Auth flow initiated and stored in session
+2025-07-07 16:34:59,334 - INFO - Redirecting to Azure AD for login
+2025-07-07 16:35:01,779 - INFO - Handling callback from Azure AD
+2025-07-07 16:35:01,779 - INFO - Acquiring token using auth code flow
+2025-07-07 16:35:01,779 - INFO - Acquiring token using auth code flow
+2025-07-07 16:35:02,422 - INFO - Token acquired successfully using auth code flow
+2025-07-07 16:35:02,422 - INFO - Token acquired successfully
+2025-07-07 16:35:02,422 - INFO - Storing user info in session: name=DhanushKumar R, email=dhanushkumar.r@bigtappanalytics.com
+2025-07-07 16:35:02,422 - INFO - Session after storing user: {'user': {'account': {}, 'name': 'DhanushKumar R', 'email': 'dhanushkumar.r@bigtappanalytics.com', 'authenticated': True, 'login_time': '2025-07-07T16:35:02.422963'}, 'flow': {'state': 'k3ir8lEShio_3zkLr_XP-g', 'redirect_uri': 'http://localhost:8000/auth/callback', 'scope': ['profile', 'openid', 'offline_access', 'User.Read', 'User.ReadBasic.All'], 'auth_uri': 'https://login.microsoftonline.com/9f2e2b7d-6081-4b3a-b7f5-433b581f6a5f/oauth2/v2.0/authorize?client_id=f8df195a-151f-44df-88ce-215640d63afe&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fcallback&scope=User.Read+User.ReadBasic.All+offline_access+openid+profile&state=k3ir8lEShio_3zkLr_XP-g&code_challenge=tMylq7kVzzpsKXbknRVRDY_YBbqY0VTcDG5NfBMrooM&code_challenge_method=S256&nonce=992da78b1d13967bb156124eb6e284539e7d79e75b0aace04bb370608b8a519a&client_info=1', 'code_verifier': 'KIcktwdu9fs4g7EBO1rvUn.expFHDj3M~hYZCSQ-0NG', 'nonce': 'NzrERhigdOkHnoJV'}, 'state': 'k3ir8lEShio_3zkLr_XP-g'}
+2025-07-07 16:35:02,422 - INFO - Verification - Retrieved user from session: True
+2025-07-07 16:35:02,422 - INFO - Authentication successful, redirecting to home page
+2025-07-07 16:35:20,813 - INFO - Using session secret from environment variable
+2025-07-07 16:35:20,814 - INFO - Starting initialization of assistant and DataUploader
+2025-07-07 16:35:30,202 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-07 16:35:30,787 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-07 16:35:30,858 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-07 16:35:30,925 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-07 16:35:30,925 - INFO - Connected to Weaviate. Using collections: CustomerProfiles, InsuranceDocs.
+2025-07-07 16:35:31,254 - INFO - Connected to Azure OpenAI service.
+2025-07-07 16:35:31,257 - INFO - Loaded conversation history from file
+2025-07-07 16:35:31,257 - INFO - Multilingual Voice Assistant initialized
+2025-07-07 16:35:31,657 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-07 16:35:33,979 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-07 16:35:34,494 - INFO - Connected to Weaviate successfully
+2025-07-07 16:35:34,773 - INFO - Initialized Azure OpenAI client
+2025-07-07 16:35:34,773 - INFO - Creating collection: CustomerProfiles
+2025-07-07 16:35:34,852 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-07 16:35:34,852 - INFO - Collection 'CustomerProfiles' already exists
+2025-07-07 16:35:34,854 - INFO - Creating collection: InsuranceDocs
+2025-07-07 16:35:34,959 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-07 16:35:34,959 - INFO - Collection 'InsuranceDocs' already exists
+2025-07-07 16:35:34,959 - INFO - Successfully initialized assistant and DataUploader
+2025-07-07 16:35:37,821 - INFO - Received request to serve home page
+2025-07-07 16:35:37,821 - INFO - User not authenticated, serving login page
+2025-07-07 16:35:43,418 - INFO - Initiating SSO login process
+2025-07-07 16:35:43,419 - INFO - Using redirect URI: http://localhost:8000/auth/callback
+2025-07-07 16:35:43,419 - INFO - Initiating auth flow with redirect_uri: http://localhost:8000/auth/callback
+2025-07-07 16:35:43,419 - INFO - Authorization flow initiated successfully
+2025-07-07 16:35:43,420 - INFO - Auth flow initiated and stored in session
+2025-07-07 16:35:43,420 - INFO - Redirecting to Azure AD for login
+2025-07-07 16:35:53,421 - INFO - Handling callback from Azure AD
+2025-07-07 16:35:53,421 - INFO - Acquiring token using auth code flow
+2025-07-07 16:35:53,421 - INFO - Acquiring token using auth code flow
+2025-07-07 16:35:53,711 - INFO - Token acquired successfully using auth code flow
+2025-07-07 16:35:53,711 - INFO - Token acquired successfully
+2025-07-07 16:35:53,711 - INFO - Storing user info in session: name=DhanushKumar R, email=dhanushkumar.r@bigtappanalytics.com
+2025-07-07 16:35:53,712 - INFO - Session after storing user: {'flow': {'state': 'U-5O01EoyIK03FWRIU3WVA', 'redirect_uri': 'http://localhost:8000/auth/callback', 'scope': ['openid', 'User.Read', 'User.ReadBasic.All', 'profile', 'offline_access'], 'auth_uri': 'https://login.microsoftonline.com/9f2e2b7d-6081-4b3a-b7f5-433b581f6a5f/oauth2/v2.0/authorize?client_id=f8df195a-151f-44df-88ce-215640d63afe&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fcallback&scope=User.Read+User.ReadBasic.All+offline_access+openid+profile&state=U-5O01EoyIK03FWRIU3WVA&code_challenge=59p8Ez_NaxxV1rTWy36SjD-4ET1wDC-OGU4dej9QS0A&code_challenge_method=S256&nonce=59a2caf5cad1de5871b31cb969e794f68c890b58b53c49b1d4882c016b3b1aae&client_info=1', 'code_verifier': 'K86nab2.g9WQwvlGFIifJety~-73kdLsHToBOxS41jm', 'nonce': 'aRKNqXckmOtzAvsT'}, 'state': 'U-5O01EoyIK03FWRIU3WVA', 'user': {'account': {}, 'name': 'DhanushKumar R', 'email': 'dhanushkumar.r@bigtappanalytics.com', 'authenticated': True, 'login_time': '2025-07-07T16:35:53.711696'}}
+2025-07-07 16:35:53,712 - INFO - Verification - Retrieved user from session: True
+2025-07-07 16:35:53,712 - INFO - Authentication successful, redirecting to home page
+2025-07-07 16:35:53,719 - INFO - Received request to serve home page
+2025-07-07 16:35:53,720 - INFO - User authenticated: DhanushKumar R (dhanushkumar.r@bigtappanalytics.com)
+2025-07-07 16:35:53,720 - INFO - Successfully serving home.html to authenticated user
+2025-07-07 16:35:54,092 - INFO - Received request to get chat history for session: 1751886354091
+2025-07-07 16:35:54,092 - WARNING - Session 1751886354091 not found in chat history
+2025-07-07 16:35:54,092 - ERROR - HTTPException in get_chat_history endpoint: 404: Session 1751886354091 not found
+2025-07-07 16:36:35,803 - INFO - Received request to serve page: customer_details
+2025-07-07 16:36:35,803 - INFO - Successfully serving customer_details.html
+2025-07-07 16:36:36,002 - INFO - Received request to get customers, customer_id: all customers
+2025-07-07 16:36:36,003 - INFO - Fetching customer profiles from Weaviate
+2025-07-07 16:36:36,066 - INFO - Returning 30 customers
+2025-07-07 16:38:06,279 - INFO - Using session secret from environment variable
+2025-07-07 16:38:06,280 - INFO - Starting initialization of assistant and DataUploader
+2025-07-07 16:38:07,029 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-07 16:38:07,637 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-07 16:38:07,750 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-07 16:38:07,813 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-07 16:38:07,813 - INFO - Connected to Weaviate. Using collections: CustomerProfiles, InsuranceDocs.
+2025-07-07 16:38:08,041 - INFO - Connected to Azure OpenAI service.
+2025-07-07 16:38:08,041 - INFO - Loaded conversation history from file
+2025-07-07 16:38:08,041 - INFO - Multilingual Voice Assistant initialized
+2025-07-07 16:38:08,445 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-07 16:38:08,906 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-07 16:38:08,941 - INFO - Connected to Weaviate successfully
+2025-07-07 16:38:09,349 - INFO - Initialized Azure OpenAI client
+2025-07-07 16:38:09,349 - INFO - Creating collection: CustomerProfiles
+2025-07-07 16:38:09,406 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-07 16:38:09,407 - INFO - Collection 'CustomerProfiles' already exists
+2025-07-07 16:38:09,407 - INFO - Creating collection: InsuranceDocs
+2025-07-07 16:38:09,459 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-07 16:38:09,460 - INFO - Collection 'InsuranceDocs' already exists
+2025-07-07 16:38:09,460 - INFO - Successfully initialized assistant and DataUploader
+2025-07-07 16:38:33,685 - INFO - Received request to serve page: home
+2025-07-07 16:38:33,685 - INFO - Successfully serving home.html
+2025-07-07 16:38:33,940 - INFO - Received request to get chat history for session: 1751886513933
+2025-07-07 16:38:33,940 - WARNING - Session 1751886513933 not found in chat history
+2025-07-07 16:38:33,940 - ERROR - HTTPException in get_chat_history endpoint: 404: Session 1751886513933 not found
+2025-07-07 16:38:36,388 - INFO - Received request to get customers, customer_id: all customers
+2025-07-07 16:38:36,388 - INFO - Fetching customer profiles from Weaviate
+2025-07-07 16:38:36,458 - INFO - Returning 30 customers
+2025-07-07 16:38:39,325 - INFO - Received request to serve page: home
+2025-07-07 16:38:39,325 - INFO - Successfully serving home.html
+2025-07-07 16:38:39,455 - INFO - Received request to get customers, customer_id: CUST001
+2025-07-07 16:38:39,455 - INFO - Fetching customer profiles from Weaviate
+2025-07-07 16:38:39,507 - INFO - Successfully retrieved customer CUST001
+2025-07-07 16:38:39,513 - INFO - Received request to get chat history for session: 1751886519450
+2025-07-07 16:38:39,513 - WARNING - Session 1751886519450 not found in chat history
+2025-07-07 16:38:39,513 - ERROR - HTTPException in get_chat_history endpoint: 404: Session 1751886519450 not found
+2025-07-07 16:38:51,704 - INFO - Received chat request for session 1751886519450
+2025-07-07 16:38:51,705 - INFO - Processing message with context for session 1751886519450
+2025-07-07 16:38:51,705 - INFO - Calling process_user_input for session 1751886519450
+2025-07-07 16:38:51,705 - INFO - Language set to english (code: en)
+2025-07-07 16:38:51,705 - INFO - Input mode set to text
+2025-07-07 16:38:51,705 - INFO - Output mode set to text
+2025-07-07 16:38:54,961 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:38:54,962 - INFO - Enhanced query: To optimize the query for a database search, it should be rewritten to focus on the key elements required for efficient retrieval. Here's an optimized version:
+
+**"Retrieve insurance plan details for customer Alex."**
+
+If the database uses structured query language (SQL) or similar, the query could be further refined into a structured format:
+
+```sql
+SELECT * 
+FROM InsurancePlans 
+WHERE CustomerName = 'Alex';
+```
+
+### Key Optimization Points:
+1. **Focus on Key Entities**: Extract the essential
+2025-07-07 16:38:54,962 - INFO - Query intent classified as: general
+2025-07-07 16:38:55,203 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/text-embedding-ada-002/embeddings?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:38:55,469 - INFO - Found 5 results in InsuranceDocs for query: To optimize the query for a database search, it should be rewritten to focus on the key elements required for efficient retrieval. Here's an optimized version:
+
+**"Retrieve insurance plan details for customer Alex."**
+
+If the database uses structured query language (SQL) or similar, the query could be further refined into a structured format:
+
+```sql
+SELECT * 
+FROM InsurancePlans 
+WHERE CustomerName = 'Alex';
+```
+
+### Key Optimization Points:
+1. **Focus on Key Entities**: Extract the essential
+2025-07-07 16:38:57,893 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:38:57,893 - INFO - Generated response: Based on the provided information, Alex Tan is associated with two insurance plans under Hong Leong Assurance. The first plan is "HLA Prime Secure," which is designed for family protection. It has a coverage term of 30 years with a sum assured of RM100,000, and the premium term is six years. The second plan is "SMART Protect Plus," which offers comprehensive coverage including accidental and critical illness protection. This plan provides coverage up to age 80 with a sum assured of RM180,000 and is fully paid upfront. If you need further assistance or details about these plans, feel free to ask!
+2025-07-07 16:38:57,893 - ERROR - Error getting customer summary: _FetchObjectsQueryExecutor.fetch_objects() got an unexpected keyword argument 'where'
+2025-07-07 16:38:59,839 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:38:59,839 - INFO - Conversation saved to conversation_history.json
+2025-07-07 16:38:59,839 - INFO - Processed input with intent general: [Context: customer] give me the details of insuran...
+2025-07-07 16:38:59,839 - INFO - Generated response for session 1751886519450 (context: customer): Based on the provided information, Alex Tan is associated with two insurance plans under Hong Leong ...
+2025-07-07 16:38:59,839 - INFO - Returning chat response for session 1751886519450
+2025-07-07 16:38:59,858 - INFO - Received request to get chat history for session: 1751886519450
+2025-07-07 16:38:59,859 - INFO - Returning chat history with 1 sessions
+2025-07-07 16:39:06,742 - INFO - Received chat request for session 1751886519450
+2025-07-07 16:39:06,742 - INFO - Processing message with context for session 1751886519450
+2025-07-07 16:39:06,742 - INFO - Calling process_user_input for session 1751886519450
+2025-07-07 16:39:06,742 - INFO - Language set to english (code: en)
+2025-07-07 16:39:06,742 - INFO - Input mode set to text
+2025-07-07 16:39:06,742 - INFO - Output mode set to text
+2025-07-07 16:39:09,206 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:39:09,206 - INFO - Enhanced query: To optimize the query for a database search, you should focus on extracting key terms and structuring the query to match relevant fields in the database. Here's an optimized version:
+
+**Optimized Query:**
+- **Context:** `customer`
+- **Product Name:** `HealthShield Gold`
+- **Coverage Type:** `comprehensive medical coverage`
+
+If you're using SQL or a similar query language, it might look like this:
+
+```sql
+SELECT * 
+FROM insurance_plans 
+WHERE product_name = '
+2025-07-07 16:39:09,206 - INFO - Query intent classified as: general
+2025-07-07 16:39:09,450 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/text-embedding-ada-002/embeddings?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:39:09,519 - INFO - Found 5 results in InsuranceDocs for query: To optimize the query for a database search, you should focus on extracting key terms and structuring the query to match relevant fields in the database. Here's an optimized version:
+
+**Optimized Query:**
+- **Context:** `customer`
+- **Product Name:** `HealthShield Gold`
+- **Coverage Type:** `comprehensive medical coverage`
+
+If you're using SQL or a similar query language, it might look like this:
+
+```sql
+SELECT * 
+FROM insurance_plans 
+WHERE product_name = '
+2025-07-07 16:39:13,828 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:39:13,829 - INFO - Generated response: It seems you're inquiring about HealthShield Gold and its comprehensive medical coverage. However, based on the provided information, there is no specific mention of "HealthShield Gold" or its details. If you're looking for information on a similar product or comprehensive medical coverage plans offered by Hong Leong Assurance, I recommend reviewing the available investment-linked or endowment plans, such as HLA CompleteProtect, SMART Protect Plus, or other options. Each product has unique benefits, including coverage for death, total and permanent disability, and critical illness, depending on the plan.
+
+If you have a specific query about a product or need assistance with tailoring coverage to your needs, feel free to ask. Alternatively, you may contact Hong Leong Assurance's customer service for more detailed information.
+2025-07-07 16:39:13,830 - ERROR - Error getting customer summary: _FetchObjectsQueryExecutor.fetch_objects() got an unexpected keyword argument 'where'
+2025-07-07 16:39:15,605 - INFO - HTTP Request: POST https://gptidk.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2025-07-07 16:39:15,617 - INFO - Conversation saved to conversation_history.json
+2025-07-07 16:39:15,617 - INFO - Processed input with intent general: [Context: customer] HealthShield Gold: Comprehensi...
+2025-07-07 16:39:15,617 - INFO - Generated response for session 1751886519450 (context: customer): It seems you're inquiring about HealthShield Gold and its comprehensive medical coverage. However, b...
+2025-07-07 16:39:15,617 - INFO - Returning chat response for session 1751886519450
+2025-07-07 16:39:15,626 - INFO - Received request to get chat history for session: 1751886519450
+2025-07-07 16:39:15,627 - INFO - Returning chat history with 1 sessions
+2025-07-08 10:02:42,061 - INFO - Using session secret from environment variable
+2025-07-08 10:02:42,061 - INFO - Starting initialization of assistant and DataUploader
+2025-07-08 10:02:42,981 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-08 10:02:43,600 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-08 10:02:43,696 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-08 10:02:43,761 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-08 10:02:43,761 - INFO - Connected to Weaviate. Using collections: CustomerProfiles, InsuranceDocs.
+2025-07-08 10:02:43,965 - INFO - Connected to Azure OpenAI service.
+2025-07-08 10:02:43,973 - INFO - Loaded conversation history from file
+2025-07-08 10:02:43,975 - INFO - Multilingual Voice Assistant initialized
+2025-07-08 10:02:44,324 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/meta "HTTP/1.1 200 OK"
+2025-07-08 10:02:44,725 - INFO - HTTP Request: GET https://pypi.org/pypi/weaviate-client/json "HTTP/1.1 200 OK"
+2025-07-08 10:02:44,745 - INFO - Connected to Weaviate successfully
+2025-07-08 10:02:44,959 - INFO - Initialized Azure OpenAI client
+2025-07-08 10:02:44,975 - INFO - Creating collection: CustomerProfiles
+2025-07-08 10:02:45,039 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/CustomerProfiles "HTTP/1.1 200 OK"
+2025-07-08 10:02:45,039 - INFO - Collection 'CustomerProfiles' already exists
+2025-07-08 10:02:45,039 - INFO - Creating collection: InsuranceDocs
+2025-07-08 10:02:45,094 - INFO - HTTP Request: GET https://nwhexgobshomixnhqbhlg.c0.asia-southeast1.gcp.weaviate.cloud/v1/schema/InsuranceDocs "HTTP/1.1 200 OK"
+2025-07-08 10:02:45,094 - INFO - Collection 'InsuranceDocs' already exists
+2025-07-08 10:02:45,094 - INFO - Successfully initialized assistant and DataUploader
+2025-07-08 10:02:51,013 - INFO - Received request to serve home page
+2025-07-08 10:02:51,013 - INFO - User not authenticated, serving login page
+2025-07-08 10:02:53,777 - INFO - Initiating SSO login process
+2025-07-08 10:02:53,777 - INFO - Using redirect URI: http://127.0.0.1:8000/auth/callback
+2025-07-08 10:02:53,777 - INFO - Initiating auth flow with redirect_uri: http://127.0.0.1:8000/auth/callback
+2025-07-08 10:02:53,777 - INFO - Authorization flow initiated successfully
+2025-07-08 10:02:53,777 - INFO - Auth flow initiated and stored in session
+2025-07-08 10:02:53,777 - INFO - Redirecting to Azure AD for login
+2025-07-08 10:02:59,760 - INFO - Received request to serve home page
+2025-07-08 10:02:59,760 - INFO - User authenticated: DhanushKumar R (dhanushkumar.r@bigtappanalytics.com)
+2025-07-08 10:02:59,768 - INFO - Successfully serving home.html to authenticated user
+2025-07-08 10:03:00,062 - INFO - Received request to get chat history for session: 1751949180057
+2025-07-08 10:03:00,062 - WARNING - Session 1751949180057 not found in chat history
+2025-07-08 10:03:00,062 - ERROR - HTTPException in get_chat_history endpoint: 404: Session 1751949180057 not found
+2025-07-08 10:03:01,965 - INFO - Received request to serve page: customer_details
+2025-07-08 10:03:01,967 - INFO - Successfully serving customer_details.html
+2025-07-08 10:03:02,128 - INFO - Received request to get customers, customer_id: all customers
+2025-07-08 10:03:02,128 - INFO - Fetching customer profiles from Weaviate
+2025-07-08 10:03:02,213 - INFO - Returning 30 customers
+2025-07-08 10:03:09,447 - INFO - Received request to serve page: home
+2025-07-08 10:03:09,447 - INFO - Successfully serving home.html
+2025-07-08 10:03:09,605 - INFO - Received request to get chat history for session: 1751949189602
+2025-07-08 10:03:09,606 - WARNING - Session 1751949189602 not found in chat history
+2025-07-08 10:03:09,606 - ERROR - HTTPException in get_chat_history endpoint: 404: Session 1751949189602 not found

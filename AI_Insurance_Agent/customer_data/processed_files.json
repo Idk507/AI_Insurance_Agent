@@ -1,0 +1,85 @@
+{
+  "a5166f964f93fbb8f0a5eb664eae715b43fcc5bae39091819bbd8670c9e7311c": {
+    "path": "customer_data\\customer_data.csv",
+    "category": "customer_profile",
+    "profiles_extracted": 30
+  },
+  "099af6a99b1a94d93570c284bcce4b73527cf39b331a9867fe1b1607098d4df2": {
+    "path": "Data\\(Eng)-PDS_HLA-Wealth-Gain-Plus_corporateportal.pdf",
+    "category": "insurance_document",
+    "uuid": "132a85f1-a754-4856-8c54-f8b1b78aa034",
+    "collection": "InsuranceDocs"
+  },
+  "5c799a07cbd586669b608f6580d950fd0a21f622f128b2e97c81165ad4403325": {
+    "path": "Data\\HLA Asset Elite Product Brochure.pdf",
+    "category": "insurance_document",
+    "uuid": "b763f6f9-9a56-4982-a974-a8aae76a5772",
+    "collection": "InsuranceDocs"
+  },
+  "ac8a323023cd2a24eb20490438f31e67ba6c5bdddd81cd236e9e07b85213d1ad": {
+    "path": "Data\\HLA CompleteProtect Brochure (EN)_v3.pdf",
+    "category": "insurance_document",
+    "uuid": "3bf4f120-a291-4bc3-a3f0-fba2753cd670",
+    "collection": "InsuranceDocs"
+  },
+  "5789ebb39cba75def78f785a944ff179fb901326b7540dbcd0d1b739f07fd868": {
+    "path": "Data\\HLA Life Essential Product Brochure.pdf",
+    "category": "insurance_document",
+    "uuid": "985d46ea-21a6-44ca-b304-9c91075409e3",
+    "collection": "InsuranceDocs"
+  },
+  "209a6ae10c0995c29d1ab76fcb02a04099f21a383c2fe4672454b5beb06e13e9": {
+    "path": "Data\\HLA Prime Secure Product Brochure.pdf",
+    "category": "insurance_document",
+    "uuid": "ec200cce-d7d7-458a-bfab-be1756a3796a",
+    "collection": "InsuranceDocs"
+  },
+  "61278388f72100fd45cadc693e898564ae3d2180bf346795fe59c15a2eace789": {
+    "path": "Data\\hlb-smart-5-investment-linked-endowment-plan-pds.pdf",
+    "category": "insurance_document",
+    "uuid": "f724d2e7-9fa7-413c-a42c-c9a03e7ad8cc",
+    "collection": "InsuranceDocs"
+  },
+  "c5fa3ae4720d832f9c21e8be815310512878e88493892442b974645a96552bc8": {
+    "path": "Data\\hlb-smart-cash-insurance-pds.pdf",
+    "category": "insurance_document",
+    "uuid": "329b5b83-08af-4483-8a21-7e679439309f",
+    "collection": "InsuranceDocs"
+  },
+  "3af0d94d367db94f567e9009779391797a15ea8653fda6b0d510fef2baf68c11": {
+    "path": "Data\\hlb-smart-protect-plus-insurance-brochure.pdf",
+    "category": "insurance_document",
+    "uuid": "32ca2300-e6d6-4041-8389-44133b09a361",
+    "collection": "InsuranceDocs"
+  },
+  "8c810587d3cff66506bf7afd54bfdd6d6dfa272b55d73f248b26c6c017b22dc8": {
+    "path": "Data\\hlb-smart-saver-plus-insurance-pds.pdf",
+    "category": "insurance_document",
+    "uuid": "8289c5f8-05e5-4df1-9b8c-94f2e289dd0e",
+    "collection": "InsuranceDocs"
+  },
+  "7812b41a44a6b42bb541655f9de049f84884539b1604cfdff57c83a8709e6133": {
+    "path": "Data\\hlb-smart-wealth-insurance-pds-en.pdf",
+    "category": "insurance_document",
+    "uuid": "92f521e9-eb55-4b9c-af64-a7f17d508095",
+    "collection": "InsuranceDocs"
+  },
+  "f6ae691f7c1a529d50628db3a80e13063a198b61a99af354644e860740d96fb8": {
+    "path": "Data\\Hong Leong Assurance.pdf",
+    "category": "insurance_document",
+    "uuid": "f8d50fcf-86cb-4809-b8f2-2718cf3e5bd3",
+    "collection": "InsuranceDocs"
+  },
+  "de334ec8490927fe6d5b7bfd941293775494372a282ef9983002fa6fabfe949d": {
+    "path": "Data\\Insurance customer Data.pdf",
+    "category": "insurance_document",
+    "uuid": "2b671d17-252a-4448-ba34-b67c17ccdee3",
+    "collection": "InsuranceDocs"
+  },
+  "9de39cc503accf7bff50b0d767e903cbcf7dd3ad800a05b9469d42c0992cd89f": {
+    "path": "Data\\summary-of-cover.pdf",
+    "category": "insurance_document",
+    "uuid": "f1557089-bfa2-477d-bfba-371e70397bc7",
+    "collection": "InsuranceDocs"
+  }
+}

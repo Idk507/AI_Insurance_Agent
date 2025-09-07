@@ -1,0 +1,31 @@
+Customer ID,Name,Age,Occupation,Current Policy,Sum Assured,Coverage Term,Premium Term,Policy Goal
+CUST001,Alex Tan,35,IT Manager,HLA Prime Secure,"RM100,000",30 years,6 years,Family protection
+CUST002,Priya Nair,29,Marketing Executive,SMART Saver Plus,"RM50,000",20 years,5 years,Savings discipline
+CUST003,Lim Chong Wei,42,Factory Owner,SMART5 Insurance,"RM100,000",25 years,5 years,Business continuity
+CUST004,Nurul Ain,51,School Principal,SMART Cash Insurance,"RM26,900",To age 80,To age 55,Income stream
+CUST005,John Samuel,60,Retired Banker,HLA Asset Elite,"RM500,000",To age 100,10 years,Legacy planning
+CUST006,Michelle Low,33,HR Manager,HLA CompleteProtect,"RM300,000",To age 100,Full pay,Health + riders
+CUST007,Rajesh Kumar,45,Sales Director,SMART Protect Plus,"RM200,000",To age 80,Full pay,Critical illness + family cover
+CUST008,Siti Aisyah,39,Entrepreneur,SMART Wealth Insurance,"RM300,000",To age 100,3 years,Wealth growth
+CUST009,Daniel Goh,27,Software Engineer,Wealth Gain Plus,"RM120,000",25 years,Ongoing,Investment-focused
+CUST010,Farah Liyana,58,Boutique Owner,HLA Prime Secure,"RM50,000",20 years,3 years,Guaranteed payout
+CUST011,Kelvin Chong,38,Business Owner,HLA Asset Elite,"RM1,000,000",To age 100,6 years,Retirement planning
+CUST012,Vanessa Lim,31,Startup Co-founder,SMART Wealth Insurance,"RM300,000",To age 100,3 years,Long-term security
+CUST013,Hafiz Rahman,28,Sales Consultant,SMART5 Insurance,"RM36,000",25 years,5 years,Medium-term savings
+CUST014,Aishwarya Pillai,50,Accountant,SMART Cash Insurance,"RM26,900",To age 80,To age 55,Low-risk returns
+CUST015,Mark Yee,47,Senior Manager,HLA CompleteProtect,"RM500,000",To age 100,Full pay,Protection + living benefits
+CUST016,Chen Mei Lin,33,Corporate Lawyer,SMART Saver Plus,"RM80,000",20 years,5 years,Cash flow security
+CUST017,Zul Iman,40,Taxi Operator,SMART Protect Plus,"RM150,000",To age 80,Full pay,Accident + CI
+CUST018,Lily Tan,56,Housewife,HLA Prime Secure,"RM50,000",20 years,3 years,Retirement payout
+CUST019,David Koh,36,eCommerce Seller,Wealth Gain Plus,"RM120,000",25 years,Ongoing,Market exposure
+CUST020,Shalini Devi,44,Head of Department,HLA CompleteProtect,"RM400,000",To age 100,Full pay,Health protection
+CUST021,Alex Tan,37,Tech Lead,SMART Protect Plus,"RM180,000",To age 80,Full pay,CI & accidental cover
+CUST022,Priya Nair,32,Product Manager,HLA CompleteProtect,"RM250,000",To age 100,Full pay,Family & health cover
+CUST023,Lim Chong Wei,45,Factory Owner,SMART Saver Plus,"RM60,000",20 years,5 years,Short-term savings
+CUST024,Nurul Ain,54,Educationist,SMART Wealth Insurance,"RM280,000",To age 100,3 years,Legacy & estate planning
+CUST025,John Samuel,62,Retiree,HLA Prime Secure,"RM70,000",20 years,3 years,Fixed payout for dependents
+CUST026,Michelle Low,36,Recruiter,SMART5 Insurance,"RM90,000",25 years,5 years,Child’s education
+CUST027,Rajesh Kumar,48,Regional Head,Wealth Gain Plus,"RM140,000",25 years,Ongoing,Wealth generation
+CUST028,Siti Aisyah,41,Retail Business Owner,SMART Cash Insurance,"RM26,900",To age 80,To age 55,No-risk cash flow
+CUST029,Daniel Goh,30,Software Developer,SMART Saver Plus,"RM75,000",20 years,5 years,Future financial buffer
+CUST030,Farah Liyana,59,Self-employed,SMART Protect Plus,"RM100,000",To age 80,Full pay,Personal protection with CI/accident
