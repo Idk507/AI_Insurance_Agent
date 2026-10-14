@@ -13,20 +13,7 @@ import os
 #     "secure": False
 # }
 
-WEAVIATE_CONFIG = {
-    "url": "0q009z7qqsgnjfbhatmbq.c0.asia-southeast1.gcp.weaviate.cloud",
-    "api_key": "WKMXWnRlTBXsvOA1OBhfnGDiPzTpXAaWc5T3",
-    "class_name": "singaporecluster"
-}
 
-
-AZURE_CONFIG = {
-    "api_key":  "75bGVIjxjnTYUbcK1RAhTxqgIfrZPDXRVZQHAwsGxmQ7xC2Cx4zfJQQJ99BEACYeBjFXJ3w3AAABACOGimGC",
-    "endpoint": "https://gptidk.openai.azure.com/",
-    "api_version": "2024-12-01-preview",
-    "embedding_deployment": "text-embedding-ada-002",
-    "gpt_deployment": "gptidk"
-}
 
 class PDFUploader:
     def __init__(self, weaviate_config, azure_config):
