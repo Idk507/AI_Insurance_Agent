@@ -27,21 +27,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Configuration
-WEAVIATE_CONFIG = {
-    "url": "0q009z7qqsgnjfbhatmbq.c0.asia-southeast1.gcp.weaviate.cloud",
-    "api_key": "WKMXWnRlTBXsvOA1OBhfnGDiPzTpXAaWc5T3",
-    "class_name": "InsuranceDocs"
-}
-
-# Load configuration from environment variables or use defaults
-AZURE_CONFIG = {
-    "api_key": "7WYgbnwGu1U7OoVI2ZUdgAzp9zQ2uLCcpFR5xNCSBIYP9DcwLYRGJQQJ99BEACYeBjFXJ3w3AAABACOGKn3Y",
-    "endpoint": "https://idkrag.openai.azure.com/",
-    "api_version": "2025-01-01-preview",
-    "embedding_deployment": "text-embedding-ada-002",
-    "gpt_deployment":  "gpt-4o"
-}
 # Language configuration with ISO codes and display names
 LANGUAGES = {
     "english": {"code": "en", "display": "English", "google_code": "en-US"},
